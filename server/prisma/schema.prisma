@@ -42,8 +42,7 @@ model comune {
   provinceId      Int
   province        province          @relation(fields: [provinceId], references: [id], map: "Comune_provinceId_fkey")
   pointofinterest pointofinterest[]
-
-  images comuneImage[]
+  images          comuneImage[]
 
   @@index([provinceId], map: "Comune_provinceId_idx")
 }

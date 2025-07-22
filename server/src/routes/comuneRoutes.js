@@ -1,7 +1,12 @@
+// server/routes/comuneRoutes.js (Versione Corretta e Pulita)
+
 import express from 'express';
 import {
-    getComuneBySlug, getAllComuniForAdmin, getComuneByIdForAdmin,
-    updateComune, addComuneImages, deleteComuneImage
+    getComuneBySlug,
+    getAllComuniForAdmin,
+    getComuneByIdForAdmin,
+    updateComune,          // L'unica funzione di aggiornamento che ci serve
+    deleteComuneImage
 } from '../controllers/comuniController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
@@ -9,18 +14,15 @@ import upload from '../middleware/uploadMiddleware.js';
 const router = express.Router();
 
 // --- Rotte Admin ---
-router.route('/').get(protect, getAllComuniForAdmin);
+router.route('/admin').get(protect, getAllComuniForAdmin);
 
 router.route('/admin/:id')
     .get(protect, getComuneByIdForAdmin)
-    // --- CORREZIONE QUI: Rimuovi upload.array() ---
-    .put(protect, updateComune);
+    // La rotta PUT ora gestisce sia testo che immagini
+    .put(protect, upload.array('images'), updateComune);
 
-router.route('/admin/:id/images')
-    // Questa è la rotta che deve gestire l'upload
-    .post(protect, upload.array('newImages'), addComuneImages);
-
-router.route('/admin/images/:imageId').delete(protect, deleteComuneImage);
+router.route('/admin/images/:imageId')
+    .delete(protect, deleteComuneImage);
 
 // --- Rotte Pubbliche ---
 router.route('/:slug').get(getComuneBySlug);
