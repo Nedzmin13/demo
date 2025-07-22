@@ -1,0 +1,303 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique(map: "Admin_email_key")
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model bar {
+  id              Int             @id @default(autoincrement())
+  specialty       String?
+  hasOutdoorSpace Boolean         @default(false)
+  openingHours    String?
+  poiId           Int             @unique(map: "Bar_poiId_key")
+  pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "Bar_poiId_fkey")
+}
+
+model bonus {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?   @db.Text
+  category    String?
+  amount      String?
+  target      String?   @db.Text
+  expiresAt   DateTime?
+  howToApply  String?   @db.Text
+}
+
+model comune {
+  id              Int               @id @default(autoincrement())
+  name            String
+  slug            String            @unique(map: "Comune_slug_key")
+  description     String?           @db.Text
+  provinceId      Int
+  province        province          @relation(fields: [provinceId], references: [id], map: "Comune_provinceId_fkey")
+  pointofinterest pointofinterest[]
+
+  images comuneImage[]
+
+  @@index([provinceId], map: "Comune_provinceId_idx")
+}
+
+model comuneImage {
+  id       Int    @id @default(autoincrement())
+  url      String @db.Text
+  comuneId Int
+  comune   comune @relation(fields: [comuneId], references: [id], onDelete: Cascade)
+
+  @@index([comuneId])
+}
+
+model destination {
+  id          Int     @id @default(autoincrement())
+  name        String
+  region      String
+  description String? @db.Text
+  tags        String?
+  season      String
+  rating      Float
+
+  images destinationImage[]
+}
+
+model destinationImage {
+  id            Int         @id @default(autoincrement())
+  url           String      @db.Text
+  destinationId Int
+  destination   destination @relation(fields: [destinationId], references: [id], onDelete: Cascade) // <-- LA CORREZIONE È QUI
+
+  @@index([destinationId])
+}
+
+model emergencynumber {
+  id          Int     @id @default(autoincrement())
+  number      String
+  title       String
+  description String?
+  order       Int?
+}
+
+model emergencyservice {
+  id              Int             @id @default(autoincrement())
+  serviceType     String
+  phoneNumber     String?
+  openingHours    String?
+  poiId           Int             @unique(map: "EmergencyService_poiId_key")
+  pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "EmergencyService_poiId_fkey")
+}
+
+model fuelstation {
+  id              Int             @id @default(autoincrement())
+  dieselPrice     Float?
+  petrolPrice     Float?
+  openingHours    String?
+  poiId           Int             @unique(map: "FuelStation_poiId_key")
+  pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "FuelStation_poiId_fkey")
+}
+
+model image {
+  id              Int              @id @default(autoincrement())
+  url             String           @db.Text
+  alt             String?
+  poiId           Int?
+  pointofinterest pointofinterest? @relation(fields: [poiId], references: [id], map: "Image_poiId_fkey")
+
+  @@index([poiId], map: "Image_poiId_idx")
+}
+
+model Itinerary {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String? @db.Text
+  duration    String?
+  region      String?
+  isPopular   Boolean @default(false)
+
+  images ItineraryImage[]
+  steps  ItineraryStep[]
+}
+
+model ItineraryImage {
+  id          Int       @id @default(autoincrement())
+  url         String    @db.Text
+  itineraryId Int
+  itinerary   Itinerary @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+
+  @@index([itineraryId])
+}
+
+model ItineraryStep {
+  id          Int       @id @default(autoincrement())
+  day         Int
+  title       String
+  description String    @db.Text
+  itineraryId Int
+  itinerary   Itinerary @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+
+  @@index([itineraryId])
+}
+
+model leaflet {
+  id              Int             @id @default(autoincrement())
+  title           String
+  validFrom       DateTime?
+  validUntil      DateTime?
+  pdfUrl          String          @db.Text
+  poiId           Int
+  pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "Leaflet_poiId_fkey")
+
+  @@index([poiId], map: "Leaflet_poiId_idx")
+}
+
+model news {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String   @db.Text
+  imageUrl    String?  @db.Text
+  category    String
+  publishedAt DateTime @default(now())
+  location    String?
+  excerpt     String?  @db.Text
+}
+
+model offer {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?   @db.Text
+  discount    String?
+  store       String
+  category    String
+  // CANCELLIAMO la vecchia colonna 'imageUrl'
+  // imageUrl    String?   @db.Text
+  link        String?   @db.Text
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+
+  // NUOVA RELAZIONE con la nuova tabella 'offerImage'
+  images offerImage[]
+}
+
+// NUOVA TABELLA per le immagini delle offerte
+model offerImage {
+  id      Int    @id @default(autoincrement())
+  url     String @db.Text
+  offerId Int
+  offer   offer  @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  @@index([offerId])
+}
+
+model parking {
+  id              Int             @id @default(autoincrement())
+  parkingType     String?
+  openingHours    String?
+  googleMapsUrl   String?
+  poiId           Int             @unique(map: "Parking_poiId_key")
+  pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "Parking_poiId_fkey")
+}
+
+model pointofinterest {
+  id                   Int                @id @default(autoincrement())
+  name                 String
+  category             String
+  address              String?
+  comuneId             Int
+  phoneNumber          String?
+  website              String?
+  description          String?            @db.Text
+  isEssentialService   Boolean            @default(false)
+  isFeaturedAttraction Boolean            @default(false)
+  bar                  bar?
+  emergencyservice     emergencyservice?
+  fuelstation          fuelstation?
+  image                image[]
+  leaflet              leaflet[]
+  parking              parking?
+  comune               comune             @relation(fields: [comuneId], references: [id], map: "PointOfInterest_comuneId_fkey")
+  restaurant           restaurant?
+  supermarket          supermarket?
+  touristattraction    touristattraction?
+
+  @@index([comuneId], map: "PointOfInterest_comuneId_idx")
+}
+
+model province {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique(map: "Province_name_key")
+  sigla       String   @unique(map: "Province_sigla_key")
+  population  String?
+  description String?  @db.Text
+  toSee       String?  @db.Text
+  regionId    Int
+  comune      comune[]
+  region      region   @relation(fields: [regionId], references: [id], map: "Province_regionId_fkey")
+
+  @@index([regionId], map: "Province_regionId_idx")
+}
+
+model region {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique(map: "Region_name_key")
+  comuni      Int
+  main_cities String?    @db.Text
+  imageUrl    String?    @db.Text
+  description String?    @db.Text
+  population  String?
+  attractions String?
+  province    province[]
+}
+
+model restaurant {
+  id              Int             @id @default(autoincrement())
+  cuisineType     String?
+  priceRange      String?
+  openingHours    String?
+  poiId           Int             @unique(map: "Restaurant_poiId_key")
+  pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "Restaurant_poiId_fkey")
+}
+
+model supermarket {
+  id              Int             @id @default(autoincrement())
+  openingHours    String?
+  hasLeaflet      Boolean         @default(false)
+  poiId           Int             @unique(map: "Supermarket_poiId_key")
+  pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "Supermarket_poiId_fkey")
+}
+
+model touristattraction {
+  id              Int             @id @default(autoincrement())
+  entryFee        String?
+  attractionType  String?
+  poiId           Int             @unique(map: "TouristAttraction_poiId_key")
+  openingHours    String?
+  pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "TouristAttraction_poiId_fkey")
+}
+
+model trafficalert {
+  id          Int      @id @default(autoincrement())
+  highway     String
+  delay       String?
+  stretch     String
+  problem     String
+  alternative String?
+  createdAt   DateTime @default(now())
+}
+
+model transportstrike {
+  id        Int      @id @default(autoincrement())
+  type      String
+  zone      String
+  duration  String
+  services  String?
+  date      DateTime
+  createdAt DateTime @default(now())
+}
