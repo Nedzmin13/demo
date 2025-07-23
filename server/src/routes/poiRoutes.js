@@ -1,9 +1,12 @@
 import express from 'express';
 import {
     getFeaturedPoisByProvince,
-    getPoiDetailsById, // Importiamo solo questa
-    createPoi, updatePoi, deletePoi,
-    addImagesToPoi, deleteImage
+    getPoiDetailsById,
+    createPoi,
+    updatePoi,
+    deletePoi,
+    addImagesToPoi,
+    deleteImage
 } from '../controllers/poiController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
@@ -11,20 +14,29 @@ import upload from '../middleware/uploadMiddleware.js';
 const router = express.Router();
 
 // --- Rotte Admin ---
-router.route('/').post(protect, upload.array('images'), createPoi);
+router.route('/')
+    .post(protect, upload.array('images'), createPoi);
 
-// La rotta per i dettagli usata dal modale di modifica
-router.route('/:id/details').get(protect, getPoiDetailsById); // USA LA FUNZIONE CORRETTA
+router.route('/:id/details')
+    .get(protect, getPoiDetailsById);
 
 router.route('/:id')
-    .put(protect, updatePoi)
+    .put(protect, updatePoi) // L'update gestisce solo il testo
     .delete(protect, deletePoi);
 
-router.route('/:id/images').post(protect, upload.array('newImages'), addImagesToPoi);
-router.route('/images/:imageId').delete(protect, deleteImage);
+// Rotta separata per aggiungere immagini a un POI esistente
+router.route('/:id/images')
+    .post(protect, upload.array('newImages'), addImagesToPoi);
+
+router.route('/images/:imageId')
+    .delete(protect, deleteImage);
+
 
 // --- Rotte Pubbliche ---
-router.route('/featured-by-province/:provinceId').get(getFeaturedPoisByProvince);
-router.route('/:id').get(getPoiDetailsById); // Anche la rotta pubblica usa la stessa funzione
+router.route('/featured-by-province/:provinceId')
+    .get(getFeaturedPoisByProvince);
+
+router.route('/:id')
+    .get(getPoiDetailsById); // La rotta pubblica per i dettagli
 
 export default router;

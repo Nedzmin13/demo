@@ -36,8 +36,9 @@ export const fetchAllComuniForAdmin = (params) => PrivateAPI.get('/comuni/admin'
 export const fetchComuneByIdForAdmin = (id) => PrivateAPI.get(`/comuni/admin/${id}`);
 export const createPoi = (formData) => PrivateAPI.post('/pois', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 export const fetchPoiDetails = (id) => PrivateAPI.get(`/pois/${id}/details`);
-export const updatePoi = (id, formData) => PrivateAPI.put(`/pois/${id}`, formData);
-export const deletePoi = (id) => PrivateAPI.delete(`/pois/${id}`);
+export const updatePoi = (id, formData) => PrivateAPI.put(`/pois/${id}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+});export const deletePoi = (id) => PrivateAPI.delete(`/pois/${id}`);
 export const addImagesToPoi = (poiId, formData) => PrivateAPI.post(`/pois/${poiId}/images`, formData);
 export const deleteImage = (imageId) => PrivateAPI.delete(`/pois/images/${imageId}`);
 export const updateComune = (id, formData) => PrivateAPI.put(`/comuni/admin/${id}`, formData, {

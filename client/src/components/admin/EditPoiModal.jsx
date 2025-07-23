@@ -6,6 +6,7 @@ import { updatePoi, fetchPoiDetails, addImagesToPoi, deleteImage as apiDeleteIma
 // Componente per i campi specifici, per mantenere il codice pulito
 const SpecificFields = ({ category, register, watch }) => {
     const hasLeafletChecked = watch('hasLeaflet'); // Controlla lo stato della checkbox
+
     switch (category) {
         case 'Restaurant':
             return (
@@ -13,14 +14,13 @@ const SpecificFields = ({ category, register, watch }) => {
                     <div><label className="text-sm font-medium text-gray-700">Tipo Cucina</label><input {...register('cuisineType')} className="mt-1 w-full border rounded p-2" /></div>
                     <div><label className="text-sm font-medium text-gray-700">Fascia di Prezzo</label><input {...register('priceRange')} className="mt-1 w-full border rounded p-2" /></div>
                     <div><label className="text-sm font-medium text-gray-700">Orari di Apertura</label><input {...register('openingHours')} className="mt-1 w-full border rounded p-2" /></div>
-                    <div><label className="text-sm font-medium text-gray-700">URL del Menu</label><input {...register('menuUrl')} className="mt-1 w-full border rounded p-2" /></div>
                 </>
             );
         case 'FuelStation':
             return (
                 <>
-                    <div><label className="text-sm font-medium text-gray-700">Prezzo Diesel</label><input type="number" step="0.001" {...register('dieselPrice')} className="mt-1 w-full border rounded p-2" /></div>
-                    <div><label className="text-sm font-medium text-gray-700">Prezzo Benzina</label><input type="number" step="0.001" {...register('petrolPrice')} className="mt-1 w-full border rounded p-2" /></div>
+                    <div><label className="text-sm font-medium text-gray-700">Prezzo Diesel</label><input type="number" step="0.001" {...register('dieselPrice', { valueAsNumber: true })} className="mt-1 w-full border rounded p-2" /></div>
+                    <div><label className="text-sm font-medium text-gray-700">Prezzo Benzina</label><input type="number" step="0.001" {...register('petrolPrice', { valueAsNumber: true })} className="mt-1 w-full border rounded p-2" /></div>
                     <div><label className="text-sm font-medium text-gray-700">Orari di Apertura</label><input {...register('openingHours')} className="mt-1 w-full border rounded p-2" /></div>
                 </>
             );
@@ -70,27 +70,40 @@ function EditPoiModal({ poiToEdit, onClose, onPoiUpdated }) {
                     const response = await fetchPoiDetails(poiToEdit.id);
                     const fullPoiData = response.data;
                     setCurrentImages(fullPoiData.image || []);
+
                     const defaultValues = {
                         ...fullPoiData,
-                        ...(fullPoiData.restaurant && { ...fullPoiData.restaurant[0] }),
-                        ...(fullPoiData.fuelstation && { ...fullPoiData.fuelstation[0] }),
-                        ...(fullPoiData.supermarket && { ...fullPoiData.supermarket[0] }),
-                        ...(fullPoiData.leaflet && fullPoiData.leaflet[0] && { leafletTitle: fullPoiData.leaflet[0].title, pdfUrl: fullPoiData.leaflet[0].pdfUrl }),
-                        ...(fullPoiData.bar && { ...fullPoiData.bar[0] }),
-                        ...(fullPoiData.parking && { ...fullPoiData.parking[0] }),
+                        ...(fullPoiData.restaurant || {})[0],
+                        ...(fullPoiData.fuelstation || {})[0],
+                        ...(fullPoiData.supermarket || {})[0],
+                        ...(fullPoiData.bar || {})[0],
+                        ...(fullPoiData.parking || {})[0],
+                        ...(fullPoiData.touristattraction || {})[0],
+                        ...(fullPoiData.emergencyservice || {})[0],
+                        ...(fullPoiData.leaflet && fullPoiData.leaflet[0] ? {
+                            leafletTitle: fullPoiData.leaflet[0].title,
+                            pdfUrl: fullPoiData.leaflet[0].pdfUrl
+                        } : {}),
                     };
                     reset(defaultValues);
-                } catch (error) { console.error("Errore nel caricare i dettagli del POI", error); }
-                finally { setIsLoadingDetails(false); }
+                } catch (error) {
+                    console.error("Errore nel caricare i dettagli del POI", error);
+                    onClose(); // Chiudi il modale se c'è un errore
+                } finally {
+                    setIsLoadingDetails(false);
+                }
             }
         };
         loadPoiData();
-    }, [poiToEdit, reset]);
+    }, [poiToEdit, reset, onClose]);
 
     const onSubmit = async (data) => {
         const { newImages, ...textData } = data;
         try {
+            // 1. Prima chiamata: aggiorna i dati testuali
             await updatePoi(poiToEdit.id, textData);
+
+            // 2. Seconda chiamata (opzionale): se ci sono nuove immagini, caricale
             if (newImages && newImages.length > 0) {
                 const imageFormData = new FormData();
                 for (let i = 0; i < newImages.length; i++) {
@@ -98,8 +111,8 @@ function EditPoiModal({ poiToEdit, onClose, onPoiUpdated }) {
                 }
                 await addImagesToPoi(poiToEdit.id, imageFormData);
             }
-            const finalDataResponse = await fetchPoiDetails(poiToEdit.id);
-            onPoiUpdated(finalDataResponse.data);
+
+            onPoiUpdated();
             onClose();
         } catch (error) {
             console.error("Errore aggiornamento POI:", error.response?.data || error);
@@ -112,7 +125,9 @@ function EditPoiModal({ poiToEdit, onClose, onPoiUpdated }) {
             try {
                 await apiDeleteImage(imageId);
                 setCurrentImages(prev => prev.filter(img => img.id !== imageId));
-            } catch (error) { alert("Impossibile eliminare l'immagine."); }
+            } catch (error) {
+                alert("Impossibile eliminare l'immagine.");
+            }
         }
     };
 
@@ -127,11 +142,11 @@ function EditPoiModal({ poiToEdit, onClose, onPoiUpdated }) {
                     <div className="p-6 text-center">Caricamento dettagli...</div>
                 ) : (
                     <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4 overflow-y-auto">
-                        <input type="hidden" {...register('category')} value={poiToEdit.category} />
+                        <input type="hidden" {...register('category')} defaultValue={poiToEdit.category} />
 
                         <div><label>Nome *</label><input {...register('name', { required: true })} className="mt-1 w-full border rounded p-2" /></div>
                         <div><label>Indirizzo *</label><input {...register('address', { required: true })} className="mt-1 w-full border rounded p-2" /></div>
-                        <div><label>Categoria</label><input value={poiToEdit.category} disabled className="mt-1 w-full border rounded p-2 bg-gray-100" /></div>
+                        <div><label>Categoria</label><input defaultValue={poiToEdit.category} disabled className="mt-1 w-full border rounded p-2 bg-gray-100" /></div>
                         <div><label>Descrizione</label><textarea {...register('description')} className="mt-1 w-full border rounded p-2"></textarea></div>
                         <div><label>Sito Web</label><input {...register('website')} className="mt-1 w-full border rounded p-2" /></div>
                         <div><label>Telefono</label><input {...register('phoneNumber')} className="mt-1 w-full border rounded p-2" /></div>
