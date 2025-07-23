@@ -29,9 +29,21 @@ const SpecificFields = ({ category, register }) => {
         case 'Supermarket':
             return (
                 <>
-                    <div><label>Orari di Apertura</label><input {...register('openingHours')} className="w-full border rounded p-2" /></div>
-                    <div><label>URL Volantino (PDF o link)</label><input {...register('leafletUrl')} className="w-full border rounded p-2" /></div>
-                    <label><input type="checkbox" {...register('hasLeaflet')} /> Ha un volantino attivo</label>
+                    <div><label>Orari di Apertura</label><input {...register('openingHours')}
+                                                                className="w-full border rounded p-2"/></div>
+
+                    {/* --- NUOVA LOGICA PER IL VOLANTINO --- */}
+                    <label className="flex items-center gap-2 mt-2">
+                        <input type="checkbox" {...register('hasLeaflet')} /> Ha un volantino attivo
+                    </label>
+                    <div>
+                        <label>Titolo Volantino</label>
+                        <input {...register('leafletTitle')} placeholder="Es. Offerte di Agosto"
+                               className="w-full border rounded p-2"/>
+                    </div>
+                    <div><label>URL Volantino (PDF o link)</label><input {...register('pdfUrl')}
+                                                                         className="w-full ..."/></div>
+
                 </>
             );
         case 'Parking':

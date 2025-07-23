@@ -38,6 +38,7 @@ import AdminRegionsPage from "./pages/admin/AdminRegionsPage.jsx";
 import AdminProvincesPage from "./pages/admin/AdminProvincesPage.jsx";
 import DestinationDetailPage from "./pages/DestinationDetailPage.jsx";
 import OfferDetailPage from "./pages/OfferDetailPage.jsx";
+import PoiDetailPage from "./pages/PoiDetailPage.jsx";
 
 const Placeholder = ({ title }) => <div className="text-center p-20 text-3xl font-bold">{title}</div>;
 
@@ -55,6 +56,8 @@ function App() {
                 <Route path="viaggio/:regionName/:provinceSigla" element={<ProvinceDetailPage />} />
                 <Route path="viaggio/:regionName/:provinceSigla/:comuneSlug" element={<ComuneDetailPage />} />
                 <Route path="/comune/:comuneSlug" element={<ComuneDetailPage />} />
+                <Route path="/poi/:id" element={<PoiDetailPage />} />
+
 
                 {/* FLUSSO SERVIZI ESSENZIALI */}
                 <Route path="/servizi-essenziali" element={<ServiceRegionsPage />} />

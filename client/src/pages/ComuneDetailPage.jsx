@@ -15,10 +15,10 @@ const PoiSection = ({ title, pois, category }) => {
             {filteredPois.length > 0 ? (
                 <div className="bg-white p-6 rounded-lg shadow-sm border space-y-4">
                     {filteredPois.map(poi => (
-                        <div key={poi.id} className="border-b pb-2 last:border-b-0">
+                        <Link to={`/poi/${poi.id}`} key={poi.id} className="block border-b pb-2 last:border-b-0 hover:bg-gray-50 p-2 rounded">
                             <h3 className="font-bold text-gray-800">{poi.name}</h3>
                             <p className="text-sm text-gray-500">{poi.address}</p>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             ) : (

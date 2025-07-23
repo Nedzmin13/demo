@@ -4,11 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32ec3e24-f520-4fe3-9902-f90ab54cf9ee" name="Changes" comment="" />
+    <list default="true" id="32ec3e24-f520-4fe3-9902-f90ab54cf9ee" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/api/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/admin/AddPoiModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/admin/AddPoiModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/admin/EditPoiModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/admin/EditPoiModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/ComuneDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ComuneDetailPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/poiController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/poiController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/poiRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/poiRoutes.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -21,6 +33,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/User/Documents/projekat-fastinfo/fastinfo/client/src/assets",
     "node.js.detected.package.eslint": "true",
@@ -41,6 +54,7 @@
       <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\client\src\assets" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\client\src\pages\admin" />
       <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\client\src\components" />
       <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\client" />
     </key>
@@ -77,11 +91,25 @@
       <workItem from="1753001064083" duration="307000" />
       <workItem from="1753001493715" duration="2955000" />
       <workItem from="1753011674329" duration="256000" />
+      <workItem from="1753011962070" duration="61452000" />
     </task>
+    <task id="LOCAL-00001" summary="///">
+      <option name="closed" value="true" />
+      <created>1753224017547</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1753224017547</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="///" />
+    <option name="LAST_COMMIT_MESSAGE" value="///" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -27,6 +27,7 @@ export const fetchUtilityInfo = () => API.get('/utility/all');
 export const loginAdmin = (credentials) => API.post('/auth/login', credentials);
 export const fetchNews = (params) => API.get('/news', { params });
 export const globalSearch = (query) => API.get('/search', { params: { q: query } });
+export const fetchPoiById = (id) => API.get(`/pois/${id}`);
 
 // --- API Private (Admin) ---
 
