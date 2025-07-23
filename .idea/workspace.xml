@@ -10,8 +10,16 @@
       <change beforePath="$PROJECT_DIR$/client/src/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/api/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/admin/AddPoiModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/admin/AddPoiModal.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/admin/EditPoiModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/admin/EditPoiModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ComuneDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ComuneDetailPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/BonusPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/BonusPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/OffersPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/OffersPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/UtilityNewsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/UtilityNewsPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminOffersPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminOffersPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/server/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/bonusesController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/bonusesController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/offersController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/offersController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/controllers/poiController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/poiController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routes/bonusRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/bonusRoutes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/routes/poiRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/poiRoutes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +99,7 @@
       <workItem from="1753001064083" duration="307000" />
       <workItem from="1753001493715" duration="2955000" />
       <workItem from="1753011674329" duration="256000" />
-      <workItem from="1753011962070" duration="61452000" />
+      <workItem from="1753011962070" duration="86902000" />
     </task>
     <task id="LOCAL-00001" summary="///">
       <option name="closed" value="true" />
@@ -101,7 +109,23 @@
       <option name="project" value="LOCAL" />
       <updated>1753224017547</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="///">
+      <option name="closed" value="true" />
+      <created>1753231517042</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1753231517042</updated>
+    </task>
+    <task id="LOCAL-00003" summary="///">
+      <option name="closed" value="true" />
+      <created>1753233237342</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1753233237342</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

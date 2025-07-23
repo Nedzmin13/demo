@@ -6,7 +6,17 @@ import {
 } from '../../api';
 import { Edit, Trash2, X } from 'lucide-react';
 
-const categories = ["Elettrodomestici", "Informatica", "Abbigliamento", "Alimentari", "Casa e Giardino", "Sport e Tempo Libero", "Altro"];
+const categories = [
+    "Elettronica",
+    "Casa",
+    "Abbigliamento",
+    "Alimentari",
+    "Bambini",
+    "Cosmetici",
+    "Auto & Moto",
+    "Sport e Tempo Libero",
+    "Altro"
+];
 
 function AdminOffersPage() {
     const [offers, setOffers] = useState([]);

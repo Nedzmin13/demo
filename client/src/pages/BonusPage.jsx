@@ -1,34 +1,49 @@
-// client/src/pages/BonusPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom'; // <-- LA CORREZIONE È QUI
 import { fetchBonuses } from '../api';
 import { Gift, Target, Calendar, Home, Briefcase, Car, FileText, Users } from 'lucide-react';
 
 const bonusCategories = [
-    { id: 'famiglia', label: 'Famiglia', icon: <Users size={16} /> },
-    { id: 'lavoro', label: 'Lavoro', icon: <Briefcase size={16} /> },
-    { id: 'casa', label: 'Casa', icon: <Home size={16} /> },
-    { id: 'mobilità', label: 'Mobilità', icon: <Car size={16} /> },
-    { id: 'fiscale', label: 'Fiscale', icon: <FileText size={16} /> },
+    { id: 'Famiglia', label: 'Famiglia', icon: <Users size={16} /> },
+    { id: 'Lavoro', label: 'Lavoro', icon: <Briefcase size={16} /> },
+    { id: 'Casa', label: 'Casa', icon: <Home size={16} /> },
+    { id: 'Mobilità', label: 'Mobilità', icon: <Car size={16} /> },
+    { id: 'Fiscale', label: 'Fiscale', icon: <FileText size={16} /> },
 ];
 
-const BonusCard = ({ bonus }) => (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 relative overflow-hidden transition-transform hover:scale-105 duration-300">
-        <div className="absolute top-0 left-0 h-full w-2 bg-orange-400"></div>
-        <div className="flex justify-between items-start mb-4">
-            <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-2">
-                <Car size={14} /> {bonus.category}
-            </span>
-            <span className="font-bold text-lg text-orange-500">fino a {bonus.amount}</span>
-        </div>
-        <h3 className="text-xl font-bold text-gray-900">{bonus.title}</h3>
-        <p className="text-gray-600 my-2 flex-grow">{bonus.description}</p>
-        <div className="text-sm space-y-2 mt-4 border-t border-gray-100 pt-4">
-            <p className="flex items-center gap-2 text-gray-500"><Target size={16}/> <strong>Target:</strong> {bonus.target || 'Non specificato'}</p>
-            <p className="flex items-center gap-2 text-red-600 font-semibold"><Calendar size={16}/> <strong>Scadenza:</strong> {new Date(bonus.expiresAt).toLocaleDateString('it-IT')}</p>
-        </div>
-    </div>
-);
+const BonusCard = ({ bonus }) => {
+    // Funzione per tagliare il testo e aggiungere "..."
+    const truncateText = (text, maxLength) => {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+        return text.substr(0, maxLength) + '...';
+    };
+
+    return (
+        <Link to={`/bonus/${bonus.id}`} className="block bg-white rounded-2xl shadow-lg border border-gray-200 p-6 relative overflow-hidden transition-transform hover:scale-[1.03] duration-300">
+            <div className="absolute top-0 left-0 h-full w-2 bg-orange-400"></div>
+            <div className="flex justify-between items-start mb-4">
+                <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-2">
+                    {bonus.category}
+                </span>
+                <span className="font-bold text-lg text-orange-500">{bonus.amount}</span>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900">{bonus.title}</h3>
+
+            {/* --- CORREZIONE QUI --- */}
+            {/* Usiamo la funzione truncateText per limitare la descrizione a 100 caratteri */}
+            <p className="text-gray-600 my-2 flex-grow min-h-[60px]">
+                {truncateText(bonus.description, 100)}
+            </p>
+
+            <div className="text-sm space-y-2 mt-auto border-t border-gray-100 pt-4">
+                <p className="flex items-center gap-2 text-gray-500"><Target size={16}/> <strong>Target:</strong> {bonus.target || 'Non specificato'}</p>
+                <p className="flex items-center gap-2 text-red-600 font-semibold"><Calendar size={16}/> <strong>Scadenza:</strong> {new Date(bonus.expiresAt).toLocaleDateString('it-IT')}</p>
+            </div>
+        </Link>
+    );
+};
 
 function BonusPage() {
     const [bonuses, setBonuses] = useState([]);
@@ -52,7 +67,7 @@ function BonusPage() {
             }
         };
         loadBonuses();
-    }, [activeCategory]); // Ricarica i dati quando cambia la categoria
+    }, [activeCategory]);
 
     return (
         <>
@@ -64,7 +79,6 @@ function BonusPage() {
                         <p className="mt-3 text-lg text-gray-600">Tutti gli incentivi e bonus disponibili in Italia, aggiornati e verificati</p>
                     </div>
 
-                    {/* Filtri Categoria */}
                     <div className="flex justify-center items-center flex-wrap gap-3 mb-12">
                         <button onClick={() => setActiveCategory(null)} className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 ${!activeCategory ? 'bg-orange-500 text-white shadow' : 'bg-white text-gray-700 border hover:bg-gray-100'}`}>
                             Tutti i Bonus
@@ -76,7 +90,6 @@ function BonusPage() {
                         ))}
                     </div>
 
-                    {/* Griglia Risultati */}
                     <div>
                         <h2 className="text-2xl font-semibold mb-6">Bonus Disponibili ({bonuses.length})</h2>
                         {loading ? (

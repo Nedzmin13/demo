@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { fetchOffers } from '../api';
-import { Tag, Search, Home, Cpu, Shirt, ShoppingBasket } from 'lucide-react';
+import { Tag, Search, Home, Cpu, Shirt, ShoppingBasket, Tv, Baby, Heart, Car, Dumbbell  } from 'lucide-react';
 
 const categories = [
-    { id: 'Elettrodomestici', label: 'Elettrodomestici', icon: <Home size={16} /> },
-    { id: 'Informatica', label: 'Informatica', icon: <Cpu size={16} /> },
+    { id: 'Elettronica', label: 'Elettronica', icon: <Tv size={16} /> },
+    { id: 'Casa', label: 'Casa', icon: <Home size={16} /> },
     { id: 'Abbigliamento', label: 'Abbigliamento', icon: <Shirt size={16} /> },
     { id: 'Alimentari', label: 'Alimentari', icon: <ShoppingBasket size={16} /> },
+    { id: 'Bambini', label: 'Bambini', icon: <Baby size={16} /> },
+    { id: 'Cosmetici', label: 'Cosmetici', icon: <Heart size={16} /> },
+    { id: 'Auto-Moto', label: 'Auto & Moto', icon: <Car size={16} /> },
+    { id: 'Sport', label: 'Sport e Tempo Libero', icon: <Dumbbell size={16} /> },
 ];
 
 const OfferCard = ({ offer }) => (

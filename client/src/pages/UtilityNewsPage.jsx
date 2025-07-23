@@ -122,6 +122,16 @@ function UtilityNewsPage() {
                         <WeatherWidget city="Florence" />
                     </div>
 
+                    {/* Sezione Numeri di Emergenza */}
+                    <div>
+                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Phone className="text-red-600"/> Numeri di Emergenza</h2>
+                        {loading ? <p>Caricamento...</p> : utilityData.emergency.length > 0 ? (
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                {utilityData.emergency.map(num => <EmergencyNumberCard key={num.id} num={num} />)}
+                            </div>
+                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessun numero di emergenza disponibile.</p>}
+                    </div>
+
                     {/* Sezione Scioperi */}
                     <div>
                         <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Train className="text-orange-500"/> Scioperi Trasporti</h2>
@@ -142,15 +152,7 @@ function UtilityNewsPage() {
                         ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessuna segnalazione di traffico rilevante.</p>}
                     </div>
 
-                    {/* Sezione Numeri di Emergenza */}
-                    <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Phone className="text-red-600"/> Numeri di Emergenza</h2>
-                        {loading ? <p>Caricamento...</p> : utilityData.emergency.length > 0 ? (
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                {utilityData.emergency.map(num => <EmergencyNumberCard key={num.id} num={num} />)}
-                            </div>
-                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessun numero di emergenza disponibile.</p>}
-                    </div>
+
                 </div>
             </div>
         </>

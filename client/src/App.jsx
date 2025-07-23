@@ -39,6 +39,7 @@ import AdminProvincesPage from "./pages/admin/AdminProvincesPage.jsx";
 import DestinationDetailPage from "./pages/DestinationDetailPage.jsx";
 import OfferDetailPage from "./pages/OfferDetailPage.jsx";
 import PoiDetailPage from "./pages/PoiDetailPage.jsx";
+import BonusDetailPage from "./pages/BonusDetailPage.jsx";
 
 const Placeholder = ({ title }) => <div className="text-center p-20 text-3xl font-bold">{title}</div>;
 
@@ -80,6 +81,8 @@ function App() {
                 <Route path="/offerte/:id" element={<OfferDetailPage />} />
 
                 <Route path="bonus" element={<BonusPage />} />
+                <Route path="/bonus/:id" element={<BonusDetailPage />} />
+
                 <Route path="top-destinazioni" element={<TopDestinationsPage />} />
                 <Route path="/destinazioni/:id" element={<DestinationDetailPage />} />
                 <Route path="notizie-utili" element={<UtilityNewsPage />} />

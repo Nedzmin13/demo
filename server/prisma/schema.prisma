@@ -18,7 +18,6 @@ model bar {
   id              Int             @id @default(autoincrement())
   specialty       String?
   hasOutdoorSpace Boolean         @default(false)
-  openingHours    String?
   poiId           Int             @unique(map: "Bar_poiId_key")
   pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "Bar_poiId_fkey")
 }
@@ -89,16 +88,13 @@ model emergencyservice {
   id              Int             @id @default(autoincrement())
   serviceType     String
   phoneNumber     String?
-  openingHours    String?
   poiId           Int             @unique(map: "EmergencyService_poiId_key")
   pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "EmergencyService_poiId_fkey")
 }
 
 model fuelstation {
   id              Int             @id @default(autoincrement())
-  dieselPrice     Float?
-  petrolPrice     Float?
-  openingHours    String?
+  website         String?
   poiId           Int             @unique(map: "FuelStation_poiId_key")
   pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "FuelStation_poiId_fkey")
 }
@@ -198,7 +194,6 @@ model offerImage {
 model parking {
   id              Int             @id @default(autoincrement())
   parkingType     String?
-  openingHours    String?
   googleMapsUrl   String?
   poiId           Int             @unique(map: "Parking_poiId_key")
   pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "Parking_poiId_fkey")
@@ -209,6 +204,10 @@ model pointofinterest {
   name                 String
   category             String
   address              String?
+  openingHours         String?
+  dieselPrice          Float?
+  petrolPrice          Float?
+  gasPrice             Float?
   comuneId             Int
   phoneNumber          String?
   website              String?
@@ -259,14 +258,12 @@ model restaurant {
   id              Int             @id @default(autoincrement())
   cuisineType     String?
   priceRange      String?
-  openingHours    String?
   poiId           Int             @unique(map: "Restaurant_poiId_key")
   pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "Restaurant_poiId_fkey")
 }
 
 model supermarket {
   id              Int             @id @default(autoincrement())
-  openingHours    String?
   hasLeaflet      Boolean         @default(false)
   poiId           Int             @unique(map: "Supermarket_poiId_key")
   pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "Supermarket_poiId_fkey")
@@ -277,7 +274,6 @@ model touristattraction {
   entryFee        String?
   attractionType  String?
   poiId           Int             @unique(map: "TouristAttraction_poiId_key")
-  openingHours    String?
   pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade, map: "TouristAttraction_poiId_fkey")
 }
 

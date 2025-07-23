@@ -11,17 +11,39 @@ const SpecificFields = ({ category, register, watch }) => {
         case 'Restaurant':
             return (
                 <>
-                    <div><label className="text-sm font-medium text-gray-700">Tipo Cucina</label><input {...register('cuisineType')} className="mt-1 w-full border rounded p-2" /></div>
-                    <div><label className="text-sm font-medium text-gray-700">Fascia di Prezzo</label><input {...register('priceRange')} className="mt-1 w-full border rounded p-2" /></div>
+                    <div><label>Prezzo Diesel</label>
+                        <input
+                            type="number"
+                            step="0.001" // Permette 3 cifre decimali
+                            {...register('dieselPrice')}
+                            className="w-full border p-2 rounded mt-1"
+                        /></div>
+                    <div><label>Prezzo Benzina</label>
+                        <input
+                            type="number"
+                            step="0.001"
+                            {...register('petrolPrice')}
+                            className="w-full border p-2 rounded mt-1"
+                        /></div>
                     <div><label className="text-sm font-medium text-gray-700">Orari di Apertura</label><input {...register('openingHours')} className="mt-1 w-full border rounded p-2" /></div>
                 </>
             );
         case 'FuelStation':
             return (
                 <>
-                    <div><label className="text-sm font-medium text-gray-700">Prezzo Diesel</label><input type="number" step="0.001" {...register('dieselPrice', { valueAsNumber: true })} className="mt-1 w-full border rounded p-2" /></div>
-                    <div><label className="text-sm font-medium text-gray-700">Prezzo Benzina</label><input type="number" step="0.001" {...register('petrolPrice', { valueAsNumber: true })} className="mt-1 w-full border rounded p-2" /></div>
-                    <div><label className="text-sm font-medium text-gray-700">Orari di Apertura</label><input {...register('openingHours')} className="mt-1 w-full border rounded p-2" /></div>
+                    <div><label>Prezzo Diesel</label><input type="number" step="0.001" {...register('dieselPrice')} />
+                    </div>
+                    <div><label>Prezzo Benzina</label><input type="number" step="0.001" {...register('petrolPrice')} />
+                    </div>
+                    <div><label>Prezzo Gas (GPL/Metano)</label><input type="number"
+                                                                      step="0.001" {...register('gasPrice')} /></div>
+                    <div><label className="text-sm font-medium text-gray-700">Orari di
+                        Apertura</label><input {...register('openingHours')}
+                                               className="mt-1 w-full border rounded p-2"/></div>
+                    <div>
+                        <label>Sito Web (opzionale)</label>
+                        <input {...register('website')} className="w-full border p-2 rounded mt-1"/>
+                    </div>
                 </>
             );
         case 'Supermarket':
@@ -70,54 +92,30 @@ function EditPoiModal({ poiToEdit, onClose, onPoiUpdated }) {
                     const response = await fetchPoiDetails(poiToEdit.id);
                     const fullPoiData = response.data;
                     setCurrentImages(fullPoiData.image || []);
-
-                    const defaultValues = {
-                        ...fullPoiData,
-                        ...(fullPoiData.restaurant || {})[0],
-                        ...(fullPoiData.fuelstation || {})[0],
-                        ...(fullPoiData.supermarket || {})[0],
-                        ...(fullPoiData.bar || {})[0],
-                        ...(fullPoiData.parking || {})[0],
-                        ...(fullPoiData.touristattraction || {})[0],
-                        ...(fullPoiData.emergencyservice || {})[0],
-                        ...(fullPoiData.leaflet && fullPoiData.leaflet[0] ? {
-                            leafletTitle: fullPoiData.leaflet[0].title,
-                            pdfUrl: fullPoiData.leaflet[0].pdfUrl
-                        } : {}),
-                    };
+                    const specificData = fullPoiData.restaurant?.[0] || fullPoiData.fuelstation?.[0] || fullPoiData.supermarket?.[0] || fullPoiData.bar?.[0] || fullPoiData.parking?.[0] || {};
+                    const leafletData = fullPoiData.leaflet?.[0] ? { leafletTitle: fullPoiData.leaflet[0].title, pdfUrl: fullPoiData.leaflet[0].pdfUrl } : {};
+                    const defaultValues = { ...fullPoiData, ...specificData, ...leafletData };
+                    Object.keys(defaultValues).forEach(key => { if (defaultValues[key] === null) defaultValues[key] = ''; });
                     reset(defaultValues);
-                } catch (error) {
-                    console.error("Errore nel caricare i dettagli del POI", error);
-                    onClose(); // Chiudi il modale se c'è un errore
-                } finally {
-                    setIsLoadingDetails(false);
-                }
+                } catch (error) { console.error(error); }
+                finally { setIsLoadingDetails(false); }
             }
         };
         loadPoiData();
-    }, [poiToEdit, reset, onClose]);
+    }, [poiToEdit, reset]);
 
     const onSubmit = async (data) => {
         const { newImages, ...textData } = data;
         try {
-            // 1. Prima chiamata: aggiorna i dati testuali
             await updatePoi(poiToEdit.id, textData);
-
-            // 2. Seconda chiamata (opzionale): se ci sono nuove immagini, caricale
             if (newImages && newImages.length > 0) {
                 const imageFormData = new FormData();
-                for (let i = 0; i < newImages.length; i++) {
-                    imageFormData.append('newImages', newImages[i]);
-                }
+                for (let i = 0; i < newImages.length; i++) imageFormData.append('newImages', newImages[i]);
                 await addImagesToPoi(poiToEdit.id, imageFormData);
             }
-
             onPoiUpdated();
             onClose();
-        } catch (error) {
-            console.error("Errore aggiornamento POI:", error.response?.data || error);
-            alert("Errore durante l'aggiornamento del POI.");
-        }
+        } catch (error) { alert("Errore durante l'aggiornamento."); }
     };
 
     const handleDeleteImage = async (imageId) => {

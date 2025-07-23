@@ -55,4 +55,18 @@ const deleteBonus = async (req, res) => {
     } catch (error) { res.status(500).json({ message: 'Errore del server.' }); }
 };
 
-export { getBonuses, createBonus, updateBonus, deleteBonus };
+const getBonusById = async (req, res) => {
+    try {
+        const bonus = await prisma.bonus.findUnique({
+            where: { id: parseInt(req.params.id) }
+        });
+        if (!bonus) {
+            return res.status(404).json({ message: "Bonus non trovato" });
+        }
+        res.json(bonus);
+    } catch (error) {
+        res.status(500).json({ message: "Errore del server" });
+    }
+};
+
+export { getBonuses, createBonus, updateBonus, deleteBonus, getBonusById };

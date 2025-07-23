@@ -1,3 +1,5 @@
+// client/src/api/index.js
+
 import axios from 'axios';
 import useAuthStore from '../store/authStore';
 
@@ -23,6 +25,7 @@ export const fetchItineraryById = (id) => API.get(`/itineraries/${id}`);
 export const fetchDestinationsBySeason = (season) => API.get('/destinations', { params: { season } });
 export const fetchDestinationById = (id) => API.get(`/destinations/${id}`);
 export const fetchBonuses = (params) => API.get('/bonuses', { params });
+export const fetchBonusById = (id) => API.get(`/bonuses/${id}`);
 export const fetchUtilityInfo = () => API.get('/utility/all');
 export const loginAdmin = (credentials) => API.post('/auth/login', credentials);
 export const fetchNews = (params) => API.get('/news', { params });
@@ -34,18 +37,21 @@ export const fetchPoiById = (id) => API.get(`/pois/${id}`);
 // Comuni & POI
 export const fetchAllComuniForAdmin = (params) => PrivateAPI.get('/comuni/admin', { params });
 export const fetchComuneByIdForAdmin = (id) => PrivateAPI.get(`/comuni/admin/${id}`);
-export const createPoi = (formData) => PrivateAPI.post('/pois', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-export const fetchPoiDetails = (id) => PrivateAPI.get(`/pois/${id}/details`);
-export const updatePoi = (id, formData) => PrivateAPI.put(`/pois/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' }
-});export const deletePoi = (id) => PrivateAPI.delete(`/pois/${id}`);
-export const addImagesToPoi = (poiId, formData) => PrivateAPI.post(`/pois/${poiId}/images`, formData);
-export const deleteImage = (imageId) => PrivateAPI.delete(`/pois/images/${imageId}`);
+// CORREZIONE 1: Aggiunto /admin al percorso
+export const createPoi = (formData) => PrivateAPI.post('/pois/admin', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const fetchPoiDetails = (id) => PrivateAPI.get(`/pois/admin/${id}/details`);
+// CORREZIONE 2: Aggiunto /admin al percorso
+export const updatePoi = (id, data) => PrivateAPI.put(`/pois/admin/${id}`, data);
+// Riorganizzo per pulizia, ma la funzione sotto era corretta.
+export const deletePoi = (id) => PrivateAPI.delete(`/pois/admin/${id}`);
+export const addImagesToPoi = (poiId, formData) => PrivateAPI.post(`/pois/admin/${poiId}/images`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const deleteImage = (imageId) => PrivateAPI.delete(`/pois/admin/images/${imageId}`);
 export const updateComune = (id, formData) => PrivateAPI.put(`/comuni/admin/${id}`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
 });
 export const deleteComuneImage = (imageId) => PrivateAPI.delete(`/comuni/admin/images/${imageId}`);
 
+// ... resto del file invariato ...
 // Offerte
 export const fetchOffersForAdmin = () => PrivateAPI.get('/offers/admin');
 export const createOffer = (formData) => PrivateAPI.post('/offers/admin', formData, { headers: { 'Content-Type': 'multipart/form-data' } });

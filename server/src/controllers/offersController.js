@@ -10,13 +10,20 @@ const uploadImageToCloudinary = async (file) => {
 const getAllOffers = async (req, res) => {
     const { category, search } = req.query;
     let whereClause = {};
-    if (category) whereClause.category = category;
+
+    if (category) {
+        whereClause.category = category;
+    }
+
     if (search) {
         whereClause.OR = [
-            { title: { contains: search, mode: 'insensitive' } },
-            { store: { contains: search, mode: 'insensitive' } }
+            // --- CORREZIONE: RIMOSSO 'mode: insensitive' ---
+            { title: { contains: search } },
+            { store: { contains: search } },
+            { description: { contains: search } }
         ];
     }
+
     try {
         const offers = await prisma.offer.findMany({
             where: whereClause,
@@ -24,7 +31,10 @@ const getAllOffers = async (req, res) => {
             orderBy: { createdAt: 'desc' }
         });
         res.status(200).json(offers);
-    } catch (error) { res.status(500).json({ message: 'Errore del server.' }); }
+    } catch (error) {
+        console.error("Errore nel recuperare le offerte:", error);
+        res.status(500).json({ message: 'Errore del server.' });
+    }
 };
 
 const getPublicOfferById = async (req, res) => {

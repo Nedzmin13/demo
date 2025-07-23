@@ -46,6 +46,9 @@ app.use('/api/strikes', strikeRoutes);
 app.use('/api/traffic', trafficRoutes);
 app.use('/api/search', searchRoutes);
 
+app.use(express.json()); // Per leggere il JSON nel body
+app.use(express.urlencoded({ extended: true })); // Per leggere i dati da form HTML (utile in generale)
+
 
 // --- Rotte di base e test (possiamo tenerle per ora) ---
 app.get('/api/test-db', async (req, res) => {
