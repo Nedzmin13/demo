@@ -74,6 +74,24 @@ const SpecificFields = ({ category, register, watch }) => {
                     <label className="flex items-center gap-2 mt-2"><input type="checkbox" {...register('hasOutdoorSpace')} /> Spazio all'aperto</label>
                 </>
             );
+        case 'Accommodation':
+            return (
+                <>
+                    <div><label>Tipo di Alloggio *</label>
+                        <select {...register('type', { required: true })} className="w-full ...">
+                            <option value="">Seleziona...</option>
+                            <option value="Hotel">Hotel</option>
+                            <option value="B&B">B&B</option>
+                            <option value="Appartamento">Appartamento</option>
+                            <option value="Agriturismo">Agriturismo</option>
+                            <option value="Altro">Altro</option>
+                        </select>
+                    </div>
+                    <div><label>Stelle (1-5)</label><input type="number" min="1" max="5" {...register('stars')} className="w-full ..."/></div>
+                    <div><label>Servizi (separati da virgola)</label><input {...register('services')} placeholder="Es. WiFi, Piscina, Parcheggio" className="w-full ..."/></div>
+                    <div><label>Link Prenotazione (Affiliato)</label><input type="url" {...register('bookingUrl')} className="w-full ..."/></div>
+                </>
+            );
         default:
             return null;
     }
@@ -83,23 +101,24 @@ function EditPoiModal({ poiToEdit, onClose, onPoiUpdated }) {
     const { register, handleSubmit, reset, watch, formState: { isSubmitting } } = useForm();
     const [currentImages, setCurrentImages] = useState([]);
     const [isLoadingDetails, setIsLoadingDetails] = useState(true);
+    const selectedCategory = watch("category", poiToEdit.category);
+
 
     useEffect(() => {
         const loadPoiData = async () => {
-            if (poiToEdit) {
-                setIsLoadingDetails(true);
-                try {
-                    const response = await fetchPoiDetails(poiToEdit.id);
-                    const fullPoiData = response.data;
-                    setCurrentImages(fullPoiData.image || []);
-                    const specificData = fullPoiData.restaurant?.[0] || fullPoiData.fuelstation?.[0] || fullPoiData.supermarket?.[0] || fullPoiData.bar?.[0] || fullPoiData.parking?.[0] || {};
-                    const leafletData = fullPoiData.leaflet?.[0] ? { leafletTitle: fullPoiData.leaflet[0].title, pdfUrl: fullPoiData.leaflet[0].pdfUrl } : {};
-                    const defaultValues = { ...fullPoiData, ...specificData, ...leafletData };
-                    Object.keys(defaultValues).forEach(key => { if (defaultValues[key] === null) defaultValues[key] = ''; });
-                    reset(defaultValues);
-                } catch (error) { console.error(error); }
-                finally { setIsLoadingDetails(false); }
-            }
+            if (!poiToEdit) return;
+            setIsLoadingDetails(true);
+            try {
+                const response = await fetchPoiDetails(poiToEdit.id);
+                const fullPoiData = response.data;
+                setCurrentImages(fullPoiData.image || []);
+                const specificData = fullPoiData.restaurant?.[0] || fullPoiData.fuelstation?.[0] || fullPoiData.supermarket?.[0] || fullPoiData.bar?.[0] || fullPoiData.parking?.[0] || fullPoiData.accommodation?.[0] || {};
+                const leafletData = fullPoiData.leaflet?.[0] ? { leafletTitle: fullPoiData.leaflet[0].title, pdfUrl: fullPoiData.leaflet[0].pdfUrl } : {};
+                const defaultValues = { ...fullPoiData, ...specificData, ...leafletData };
+                Object.keys(defaultValues).forEach(key => { if (defaultValues[key] === null) defaultValues[key] = ''; });
+                reset(defaultValues);
+            } catch (error) { console.error(error); }
+            finally { setIsLoadingDetails(false); }
         };
         loadPoiData();
     }, [poiToEdit, reset]);

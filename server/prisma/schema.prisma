@@ -224,6 +224,11 @@ model pointofinterest {
   restaurant           restaurant?
   supermarket          supermarket?
   touristattraction    touristattraction?
+  accommodation        accommodation?
+  type                 String?
+  stars                Int?
+  services             String?            @db.Text
+  bookingUrl           String?            @db.Text
 
   @@index([comuneId], map: "PointOfInterest_comuneId_idx")
 }
@@ -295,4 +300,10 @@ model transportstrike {
   services  String?
   date      DateTime
   createdAt DateTime @default(now())
+}
+
+model accommodation {
+  id              Int             @id @default(autoincrement())
+  poiId           Int             @unique
+  pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade)
 }

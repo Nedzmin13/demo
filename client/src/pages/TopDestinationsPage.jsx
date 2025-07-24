@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom'; // <-- IMPORTA
+import { Link } from 'react-router-dom';
 import { fetchDestinationsBySeason } from '../api';
 import { Sun, Leaf, Snowflake, Flower2, Star } from 'lucide-react';
 
 const seasons = [
-    { id: 'primavera', label: 'Primavera', icon: <Flower2 size={18} /> },
-    { id: 'estate', label: 'Estate', icon: <Sun size={18} /> },
-    { id: 'autunno', label: 'Autunno', icon: <Leaf size={18} /> },
-    { id: 'inverno', label: 'Inverno', icon: <Snowflake size={18} /> },
+    { id: 'Primavera', label: 'Primavera', icon: <Flower2 size={18} /> },
+    { id: 'Estate', label: 'Estate', icon: <Sun size={18} /> },
+    { id: 'Autunno', label: 'Autunno', icon: <Leaf size={18} /> },
+    { id: 'Inverno', label: 'Inverno', icon: <Snowflake size={18} /> },
 ];
 
-// La card ora è un link
 const DestinationCard = ({ dest }) => (
     <Link to={`/destinazioni/${dest.id}`} className="block bg-white rounded-lg shadow-md overflow-hidden group">
         <div className="overflow-hidden">
@@ -35,8 +34,9 @@ const DestinationCard = ({ dest }) => (
         </div>
     </Link>
 );
+
 function TopDestinationsPage() {
-    const [activeSeason, setActiveSeason] = useState('primavera');
+    const [activeSeason, setActiveSeason] = useState('Primavera');
     const [destinations, setDestinations] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -53,7 +53,7 @@ function TopDestinationsPage() {
             }
         };
         loadData();
-    }, [activeSeason]); // Ricarica i dati quando cambia la stagione attiva
+    }, [activeSeason]);
 
     return (
         <>
@@ -65,8 +65,10 @@ function TopDestinationsPage() {
                         <p className="mt-3 text-lg text-gray-600">Le destinazioni più belle d'Italia per ogni stagione dell'anno</p>
                     </div>
 
-                    {/* Tabs Stagioni */}
-                    <div className="flex justify-center border-b mb-10">
+                    {/* --- NAVIGAZIONE RESPONSIVE IBRIDA --- */}
+
+                    {/* Tabs per Desktop (visibili da 'sm' in su) */}
+                    <div className="hidden sm:flex justify-center border-b mb-10">
                         {seasons.map(season => (
                             <button
                                 key={season.id}
@@ -82,9 +84,30 @@ function TopDestinationsPage() {
                         ))}
                     </div>
 
+                    {/* Bottoni per Mobile (nascosti da 'sm' in su) */}
+                    <div className="sm:hidden flex justify-center items-center flex-wrap gap-3 mb-12">
+                        {seasons.map(season => (
+                            <button
+                                key={season.id}
+                                onClick={() => setActiveSeason(season.id)}
+                                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 flex items-center gap-2 ${
+                                    activeSeason === season.id
+                                        ? 'bg-purple-600 text-white shadow-md'
+                                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'
+                                }`}
+                            >
+                                {season.icon} {season.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* --- FINE NAVIGAZIONE --- */}
+
                     {/* Risultati */}
                     <div>
-                        {loading ? <p className="text-center">Caricamento...</p> : destinations.length > 0 ? (
+                        {loading ? (
+                            <div className="text-center">Caricamento...</div>
+                        ) : destinations.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {destinations.map(dest => <DestinationCard key={dest.id} dest={dest} />)}
                             </div>

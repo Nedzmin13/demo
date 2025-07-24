@@ -1,7 +1,7 @@
 import prisma from '../config/prismaClient.js';
 import cloudinary from '../config/cloudinary.js';
 
-// TUE FUNZIONI HELPER (CORRETTE E SPOSTATE QUI)
+// Funzioni helper
 const toNull = (value) => {
     return value === '' || value === undefined || value === null ? null : value;
 };
@@ -18,7 +18,10 @@ const toBoolean = (value) => {
     return !!value;
 };
 
-// --- FUNZIONI PUBBLICHE (DAL TUO CODICE) ---
+// =======================================================
+// ---                FUNZIONI PUBBLICHE               ---
+// =======================================================
+
 const getFeaturedPoisByProvince = async (req, res) => {
     const { provinceId } = req.params;
     const { type } = req.query;
@@ -44,7 +47,8 @@ const getPoiDetailsById = async (req, res) => {
                 comune: { include: { province: { include: { region: true } } } },
                 image: true, restaurant: true, fuelstation: true,
                 supermarket: true, bar: true, parking: true,
-                touristattraction: true, emergencyservice: true, leaflet: true
+                touristattraction: true, emergencyservice: true, leaflet: true,
+                accommodation: true
             }
         });
         if (!poi) return res.status(404).json({ message: "Punto di Interesse non trovato" });
@@ -52,14 +56,14 @@ const getPoiDetailsById = async (req, res) => {
     } catch (error) { res.status(500).json({ message: "Errore del server" }); }
 };
 
-// --- FUNZIONI ADMIN (DAL TUO CODICE, MA CORRETTE) ---
+// =======================================================
+// ---                  FUNZIONI ADMIN                 ---
+// =======================================================
+
 const createPoi = async (req, res) => {
-    const {
-        name, category, address, comuneId, description, website, phoneNumber, openingHours,
-        isEssentialService, isFeaturedAttraction, cuisineType, priceRange, menuUrl,
-        dieselPrice, petrolPrice, gasPrice,  hasLeaflet, pdfUrl, leafletTitle, specialty,
-        hasOutdoorSpace, parkingType
-    } = req.body;
+    const { name, category, address, comuneId, description, website, phoneNumber, openingHours, isEssentialService, isFeaturedAttraction,
+        dieselPrice, petrolPrice, gasPrice, cuisineType, priceRange, hasLeaflet, pdfUrl, leafletTitle,
+        specialty, hasOutdoorSpace, parkingType, type, stars, services, bookingUrl } = req.body;
     try {
         const poi = await prisma.$transaction(async (tx) => {
             const createdPoi = await tx.pointofinterest.create({
@@ -67,23 +71,21 @@ const createPoi = async (req, res) => {
                     name, category, address, comuneId: parseInt(comuneId),
                     description: toNull(description), website: toNull(website), phoneNumber: toNull(phoneNumber),
                     openingHours: toNull(openingHours),
+                    dieselPrice: toNull(dieselPrice) ? parseFloat(dieselPrice) : null,
+                    petrolPrice: toNull(petrolPrice) ? parseFloat(petrolPrice) : null,
+                    gasPrice: toNull(gasPrice) ? parseFloat(gasPrice) : null,
                     isEssentialService: toBoolean(isEssentialService), isFeaturedAttraction: toBoolean(isFeaturedAttraction),
                 }
             });
-
             if (category === 'Restaurant') await tx.restaurant.create({ data: { poiId: createdPoi.id, cuisineType: toNull(cuisineType), priceRange: toNull(priceRange) } });
-            else if (category === 'FuelStation')
-                await tx.fuelstation.create(
-                    { data: {
-                            poiId: createdPoi.id,
-                            website: toNull(website)
-                        } });
+            else if (category === 'FuelStation') await tx.fuelstation.create({ data: { poiId: createdPoi.id, website: toNull(website) } });
             else if (category === 'Supermarket') {
                 await tx.supermarket.create({ data: { poiId: createdPoi.id, hasLeaflet: toBoolean(hasLeaflet) } });
-                if (toBoolean(hasLeaflet) && toNull(pdfUrl)) { await tx.leaflet.create({ data: { poiId: createdPoi.id, title: toNull(leafletTitle) || `Volantino ${name}`, pdfUrl } }); }
+                if (toBoolean(hasLeaflet) && toNull(pdfUrl)) await tx.leaflet.create({ data: { poiId: createdPoi.id, title: toNull(leafletTitle) || `Volantino ${name}`, pdfUrl } });
             }
             else if (category === 'Bar') await tx.bar.create({ data: { poiId: createdPoi.id, specialty: toNull(specialty), hasOutdoorSpace: toBoolean(hasOutdoorSpace) } });
             else if (category === 'Parking') await tx.parking.create({ data: { poiId: createdPoi.id, parkingType: toNull(parkingType) } });
+            else if (category === 'Accommodation') await tx.accommodation.create({ data: { poiId: createdPoi.id, type: toNull(type), stars: stars ? parseInt(stars) : null, services: toNull(services), bookingUrl: toNull(bookingUrl) } });
 
             if (req.files && req.files.length > 0) {
                 for (const file of req.files) {
@@ -102,7 +104,8 @@ const createPoi = async (req, res) => {
 const updatePoi = async (req, res) => {
     const poiId = parseInt(req.params.id);
     const { name, category, address, description, website, phoneNumber, openingHours, isEssentialService, isFeaturedAttraction,
-        cuisineType, priceRange, menuUrl, dieselPrice, petrolPrice, gasPrice, hasLeaflet, pdfUrl, leafletTitle, specialty, hasOutdoorSpace, parkingType } = req.body;
+        dieselPrice, petrolPrice, gasPrice, cuisineType, priceRange, hasLeaflet, pdfUrl, leafletTitle,
+        specialty, hasOutdoorSpace, parkingType, type, stars, services, bookingUrl } = req.body;
     try {
         await prisma.$transaction(async (tx) => {
             await tx.pointofinterest.update({ where: { id: poiId }, data: {
@@ -112,30 +115,20 @@ const updatePoi = async (req, res) => {
                     dieselPrice: toNull(dieselPrice) ? parseFloat(dieselPrice) : null,
                     petrolPrice: toNull(petrolPrice) ? parseFloat(petrolPrice) : null,
                     gasPrice: toNull(gasPrice) ? parseFloat(gasPrice) : null,
-                    isEssentialService: toBoolean(isEssentialService),
-                    isFeaturedAttraction: toBoolean(isFeaturedAttraction)
+                    isEssentialService: toBoolean(isEssentialService), isFeaturedAttraction: toBoolean(isFeaturedAttraction)
                 }});
-            if (category === 'Restaurant') await tx.restaurant.upsert({ where: { poiId }, update: { cuisineType: toNull(cuisineType), priceRange: toNull(priceRange) }, create: { poiId, cuisineType, priceRange } });
-            else if (category === 'FuelStation') {
-                await tx.fuelstation.upsert({
-                    where: { poiId },
-                    update: {
-                        website: toNull(website)
-                    },
-                    create: {
-                        poiId,  website: toNull(website)
-                    }
-                });
-            }
+            if (category === 'Restaurant') await tx.restaurant.upsert({ where: { poiId }, update: { cuisineType: toNull(cuisineType), priceRange: toNull(priceRange) }, create: { poiId, cuisineType: toNull(cuisineType), priceRange: toNull(priceRange) } });
+            else if (category === 'FuelStation') await tx.fuelstation.upsert({ where: { poiId }, update: { website: toNull(website) }, create: { poiId, website: toNull(website) } });
             else if (category === 'Supermarket') {
                 await tx.supermarket.upsert({ where: { poiId }, update: { hasLeaflet: toBoolean(hasLeaflet) }, create: { poiId, hasLeaflet: toBoolean(hasLeaflet) } });
                 await tx.leaflet.deleteMany({ where: { poiId } });
                 if (toBoolean(hasLeaflet) && toNull(pdfUrl)) { await tx.leaflet.create({ data: { poiId: poiId, title: toNull(leafletTitle) || `Volantino ${name}`, pdfUrl: pdfUrl } }); }
             }
-            else if (category === 'Bar') await tx.bar.upsert({ where: { poiId }, update: { specialty: toNull(specialty), hasOutdoorSpace: toBoolean(hasOutdoorSpace) }, create: { poiId, specialty, hasOutdoorSpace: toBoolean(hasOutdoorSpace) } });
-            else if (category === 'Parking') await tx.parking.upsert({ where: { poiId }, update: { parkingType: toNull(parkingType) }, create: { poiId, parkingType } });
+            else if (category === 'Bar') await tx.bar.upsert({ where: { poiId }, update: { specialty: toNull(specialty), hasOutdoorSpace: toBoolean(hasOutdoorSpace) }, create: { poiId, specialty: toNull(specialty), hasOutdoorSpace: toBoolean(hasOutdoorSpace) } });
+            else if (category === 'Parking') await tx.parking.upsert({ where: { poiId }, update: { parkingType: toNull(parkingType) }, create: { poiId, parkingType: toNull(parkingType) } });
+            else if (category === 'Accommodation') await tx.accommodation.upsert({ where: { poiId }, update: { type: toNull(type), stars: stars ? parseInt(stars) : null, services: toNull(services), bookingUrl: toNull(bookingUrl) }, create: { poiId, type: toNull(type), stars: stars ? parseInt(stars) : null, services: toNull(services), bookingUrl: toNull(bookingUrl) } });
         });
-        const updatedPoi = await prisma.pointofinterest.findUnique({ where: { id: poiId }, include: { image: true, restaurant: true, fuelstation: true, supermarket: true, bar: true, parking: true, touristattraction: true, emergencyservice: true, leaflet: true }});
+        const updatedPoi = await prisma.pointofinterest.findUnique({ where: { id: poiId }, include: { image: true, restaurant: true, fuelstation: true, supermarket: true, bar: true, parking: true, touristattraction: true, emergencyservice: true, leaflet: true, accommodation: true }});
         res.status(200).json(updatedPoi);
     } catch (error) { console.error("Errore aggiornamento POI:", error); res.status(500).json({ message: "Errore del server" }); }
 };
@@ -145,10 +138,7 @@ const deletePoi = async (req, res) => {
     try {
         await prisma.pointofinterest.delete({ where: { id: poiId } });
         res.status(200).json({ message: 'POI eliminato con successo.' });
-    } catch (error) {
-        console.error(`Errore eliminazione POI ${poiId}:`, error);
-        res.status(500).json({ message: "Errore del server" });
-    }
+    } catch (error) { res.status(500).json({ message: "Errore del server" }); }
 };
 
 const addImagesToPoi = async (req, res) => {
@@ -158,9 +148,7 @@ const addImagesToPoi = async (req, res) => {
     }
     try {
         for (const file of req.files) {
-            const b64 = Buffer.from(file.buffer).toString("base64");
-            const dataURI = `data:${file.mimetype};base64,${b64}`;
-            const result = await cloudinary.uploader.upload(dataURI, { folder: "fastinfo_pois" });
+            const result = await uploadImageToCloudinary(file);
             await prisma.image.create({ data: { url: result.secure_url, poiId: poiId } });
         }
         res.status(201).json({ message: 'Immagini aggiunte.' });
@@ -172,12 +160,9 @@ const deleteImage = async (req, res) => {
     try {
         await prisma.image.delete({ where: { id: imageId } });
         res.status(200).json({ message: 'Immagine eliminata.' });
-    } catch (error) {
-        res.status(500).json({ message: "Errore del server" });
-    }
+    } catch (error) { res.status(500).json({ message: "Errore del server" }); }
 };
 
-// --- BLOCCO EXPORT COMPLETO E CORRETTO ---
 export {
     getFeaturedPoisByProvince,
     getPoiDetailsById,

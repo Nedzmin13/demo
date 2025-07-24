@@ -3,6 +3,23 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { fetchOffers } from '../api';
 import { Tag, Search, Home, Cpu, Shirt, ShoppingBasket, Tv, Baby, Heart, Car, Dumbbell  } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1 // Applica un ritardo di 0.1s tra ogni figlio
+        }
+    }
+};
+
+const cardVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+};
+
 
 const categories = [
     { id: 'Elettronica', label: 'Elettronica', icon: <Tv size={16} /> },
@@ -16,6 +33,7 @@ const categories = [
 ];
 
 const OfferCard = ({ offer }) => (
+    <motion.div variants={cardVariants}>
     <Link to={`/offerte/${offer.id}`} className="block bg-white rounded-lg shadow-md border overflow-hidden flex flex-col group">
         <div className="overflow-hidden aspect-[4/3] bg-gray-100">
             <img
@@ -36,6 +54,7 @@ const OfferCard = ({ offer }) => (
             </div>
         </div>
     </Link>
+    </motion.div>
 );
 
 function OffersPage() {
@@ -107,9 +126,14 @@ function OffersPage() {
                         {loading ? (
                             <p>Caricamento offerte...</p>
                         ) : offers.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {offers.map(offer => <OfferCard key={offer.id} offer={offer} />)}
-                            </div>
+                            <motion.div
+                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                                variants={containerVariants}
+                                initial="hidden"
+                                animate="visible"
+                            >
+                                {offers.map(offer => <OfferCard key={offer.id} offer={offer}/>)}
+                            </motion.div>
                         ) : (
                             <div className="text-center py-16 bg-white rounded-lg shadow-sm">
                                 <p className="text-gray-500">Nessuna offerta trovata con i filtri selezionati.</p>

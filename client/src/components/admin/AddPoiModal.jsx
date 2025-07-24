@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { X } from 'lucide-react';
 import { createPoi } from '../../api';
 
-const categories = ["Restaurant", "FuelStation", "Supermarket", "Bar", "Parking", "TouristAttraction", "EmergencyService"];
+const categories = ["Restaurant", "FuelStation", "Supermarket", "Bar", "Parking", "TouristAttraction", "EmergencyService", "Accommodation"];
 
 const SpecificFields = ({ category, register, watch }) => {
     const hasLeafletChecked = watch('hasLeaflet');
@@ -34,10 +34,29 @@ const SpecificFields = ({ category, register, watch }) => {
                         <div><label>URL Volantino</label><input {...register('pdfUrl')} className="w-full border p-2 rounded mt-1"/></div> </> )}
                 </>
             );
+
         case 'Parking':
             return ( <> <div><label>Tipo Parcheggio</label><input {...register('parkingType')} className="w-full border p-2 rounded mt-1"/></div> </> );
         case 'Bar':
             return ( <> <div><label>Specialità</label><input {...register('specialty')} className="w-full border p-2 rounded mt-1"/></div> <label className="flex items-center gap-2"><input type="checkbox" {...register('hasOutdoorSpace')} /> Spazio all'aperto</label> </> );
+        case 'Accommodation':
+            return (
+                <>
+                    <div><label>Tipo di Alloggio *</label>
+                        <select {...register('type', { required: true })} className="w-full ...">
+                            <option value="">Seleziona...</option>
+                            <option value="Hotel">Hotel</option>
+                            <option value="B&B">B&B</option>
+                            <option value="Appartamento">Appartamento</option>
+                            <option value="Agriturismo">Agriturismo</option>
+                            <option value="Altro">Altro</option>
+                        </select>
+                    </div>
+                    <div><label>Stelle (1-5)</label><input type="number" {...register('stars')} /></div>
+                    <div><label>Servizi</label><input {...register('services')} /></div>
+                    <div><label>Link Prenotazione</label><input type="url" {...register('bookingUrl')} /></div>
+                </>
+            );
         default:
             return null;
     }

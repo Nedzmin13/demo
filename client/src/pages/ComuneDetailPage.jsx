@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { fetchComuneBySlug } from '../api';
-import { ChevronRight, HeartHandshake, Utensils, Eye, AlertTriangle } from 'lucide-react';
+import { ChevronRight, HeartHandshake, Utensils, Eye, AlertTriangle, BedDouble } from 'lucide-react';
 import { ImageGallery } from '../components/ImageGallery';
 
 // Componente per una singola sezione di POI
@@ -118,6 +118,7 @@ function ComuneDetailPage() {
                         <div className="flex space-x-2 sm:space-x-4 border-b pb-4 mb-8 overflow-x-auto">
                             <TabButton id="servizi" label="Servizi Essenziali" icon={<HeartHandshake size={20} />} />
                             <TabButton id="ristorazione" label="Ristorazione" icon={<Utensils size={20} />} />
+                            <TabButton id="alloggiare" label="Alloggiare" icon={<BedDouble size={20} />} />
                             <TabButton id="vedere" label="Cosa Vedere" icon={<Eye size={20} />} />
                             <TabButton id="emergenze" label="Emergenze" icon={<AlertTriangle size={20} />} />
                         </div>
@@ -134,6 +135,11 @@ function ComuneDetailPage() {
                                 <div>
                                     <PoiSection title="Ristoranti" pois={comune.pointofinterest} category="Restaurant" />
                                     <PoiSection title="Bar" pois={comune.pointofinterest} category="Bar" />
+                                </div>
+                            )}
+                            {activeTab === 'alloggiare' && (
+                                <div>
+                                    <PoiSection title="Hotel, B&B e Alloggi" pois={comune.pointofinterest} category="Accommodation" />
                                 </div>
                             )}
                             {activeTab === 'vedere' && (

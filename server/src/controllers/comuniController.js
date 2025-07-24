@@ -41,49 +41,46 @@ const getComuneBySlug = async (req, res) => {
 // =======================================================
 
 const getAllComuniForAdmin = async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 25;
-    const search = req.query.search || '';
-
-    const skip = (page - 1) * limit;
-
-    // 2. Costruisci la clausola 'where' per la ricerca
-    const whereClause = search ? {
-        OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { province: { name: { contains: search, mode: 'insensitive' } } },
-            { province: { sigla: { contains: search, mode: 'insensitive' } } },
-        ],
-    } : {};
-
     try {
-        // 3. Esegui due query in parallelo: una per i dati e una per il conteggio totale
-        const [comuni, total] = await prisma.$transaction([
+        const { search = '', page = 1, limit = 25 } = req.query;
+
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const skip = (pageNum - 1) * limitNum;
+
+        const whereClause = {
+            OR: [
+                { name: { contains: search } },
+                { province: { name: { contains: search } } },
+                { province: { sigla: { contains: search } } },
+            ],
+        };
+
+        const [comuni, totalComuni] = await prisma.$transaction([
             prisma.comune.findMany({
                 where: whereClause,
-                orderBy: { name: 'asc' },
-                include: { province: true },
                 skip: skip,
-                take: limit,
+                take: limitNum,
+                include: {
+                    province: { select: { name: true, sigla: true } }
+                },
+                orderBy: { name: 'asc' }
             }),
             prisma.comune.count({ where: whereClause })
         ]);
 
-        const totalPages = Math.ceil(total / limit);
-
-        // 4. Restituisci una risposta strutturata con dati e info di paginazione
         res.status(200).json({
             data: comuni,
             pagination: {
-                total,
-                page,
-                totalPages,
-                limit
+                total: totalComuni,
+                page: pageNum,
+                limit: limitNum,
+                totalPages: Math.ceil(totalComuni / limitNum)
             }
         });
     } catch (error) {
         console.error("Errore nel recuperare i comuni per l'admin:", error);
-        res.status(500).json({ message: "Errore del server" });
+        res.status(500).json({ message: "Errore del server." });
     }
 };
 
