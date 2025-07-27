@@ -88,7 +88,11 @@ function OffersPage() {
 
     return (
         <>
-            <Helmet><title>Affari & Sconti - FastInfo</title></Helmet>
+            <Helmet>
+                <title>Affari & Sconti - Offerte Aggiornate in Italia | InfoSubito</title>
+                <meta name="description" content="Scopri le migliori offerte e sconti dai principali negozi italiani. Categorie: Elettronica, Casa, Abbigliamento e altro. Aggiornamenti in tempo reale." />
+                <meta property="og:title" content="Affari & Sconti - Offerte Aggiornate in Italia" />
+            </Helmet>
             <div className="bg-gray-100 py-12">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">

@@ -21,9 +21,37 @@ function OfferDetailPage() {
 
     if (!offer) return <div className="text-center p-10">Caricamento offerta...</div>;
 
+    const pageTitle = `${offer.title} - Sconto ${offer.discount} | InfoSubito`;
+    const metaDescription = `Approfitta dell'offerta su ${offer.title} da ${offer.store}. Dettagli, descrizione e link diretto per acquistare al miglior prezzo.`;
+
     return (
         <>
-            <Helmet><title>{offer.title} - FastInfo</title></Helmet>
+            <Helmet>
+                <title>{pageTitle}</title>
+                <meta name="description" content={metaDescription} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={metaDescription} />
+                <meta property="og:type" content="product" />
+                {offer.images && offer.images.length > 0 && (
+                    <meta property="og:image" content={offer.images[0].url} />
+                )}
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Offer",
+                        "name": offer.title,
+                        "description": offer.description,
+                        "priceSpecification": {
+                            "@type": "PriceSpecification",
+                            "price": offer.discount // Potresti dover estrarre il numero qui
+                        },
+                        "seller": {
+                            "@type": "Organization",
+                            "name": offer.store
+                        }
+                    })}
+                </script>
+            </Helmet>
             <div className="bg-gray-50">
                 <div className="container mx-auto py-12 px-4 max-w-5xl">
                     <ImageGallery images={offer.images} />

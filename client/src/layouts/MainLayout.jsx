@@ -4,6 +4,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import CookieBanner from "../components/CookieBanner.jsx";
 
 function MainLayout() {
     return (
@@ -14,6 +15,7 @@ function MainLayout() {
                 <Outlet />
             </main>
             <Footer />
+            <CookieBanner />
         </div>
     );
 }

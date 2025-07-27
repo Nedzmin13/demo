@@ -24,8 +24,9 @@ function TravelPage() {
     return (
         <>
             <Helmet>
-                <title>Scopri l'Italia - FastInfo</title>
-                <meta name="description" content="Trova informazioni utili per il tuo viaggio in Italia: regioni, province, servizi essenziali, attrazioni e itinerari." />
+                <title>Viaggiare in Italia: Guide, Itinerari e Destinazioni | InfoSubito</title>
+                <meta name="description" content="Organizza il tuo viaggio in Italia. Scopri le guide dettagliate per ogni regione, provincia e comune. Trova itinerari consigliati e le migliori destinazioni." />
+                <meta property="og:title" content="Viaggiare in Italia: Guide, Itinerari e Destinazioni" />
             </Helmet>
             <div className="bg-gray-50 py-16 sm:py-24">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">

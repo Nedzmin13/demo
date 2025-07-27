@@ -77,10 +77,20 @@ function ComuneDetailPage() {
 
     const fullDescription = `Il comune di ${comune.name} si trova nella provincia di ${comune.province?.name || ''}${comune.province?.region?.name ? `, in ${comune.province.region.name}` : ''}. ${comune.description || 'Descrizione non ancora disponibile.'}`;
 
+    const pageTitle = `${comune.name} (${comune.province.sigla}) - Guida e Servizi | InfoSubito`;
+    const metaDescription = `Guida completa a ${comune.name}: scopri cosa vedere, i servizi essenziali, i ristoranti e gli alloggi in questo comune della provincia di ${comune.province.name}.`;
+
     return (
-        <>
+        <> 
             <Helmet>
-                <title>{comune.name} - Guida e Servizi - FastInfo</title>
+                <title>{pageTitle}</title>
+                <meta name="description" content={metaDescription} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={metaDescription} />
+                <meta property="og:type" content="website" />
+                {comune.images && comune.images.length > 0 && (
+                    <meta property="og:image" content={comune.images[0].url} />
+                )}
             </Helmet>
 
             <div className="bg-gray-50">

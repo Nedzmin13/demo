@@ -60,7 +60,11 @@ function TopDestinationsPage() {
 
     return (
         <>
-            <Helmet><title>Top Destinazioni per Stagione - FastInfo</title></Helmet>
+            <Helmet>
+                <title>Top Destinazioni in Italia per Stagione | InfoSubito</title>
+                <meta name="description" content="Scopri le migliori destinazioni italiane per ogni stagione. Trova idee e ispirazione per il tuo prossimo viaggio in primavera, estate, autunno o inverno." />
+                <meta property="og:title" content="Top Destinazioni in Italia per Stagione" />
+            </Helmet>
             <div className="bg-white py-12">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">

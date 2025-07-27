@@ -17,7 +17,7 @@ function Hero() {
 
             <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-48 text-center">
                 <h1 className="text-6xl md:text-7xl font-bold drop-shadow-lg">
-                    FastInfo
+                    InfoSubito
                 </h1>
                 <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md">
                     Il portale che ti tiene aggiornato su tutto ciò che serve: viaggi, offerte, bonus e notizie utili per l'Italia.

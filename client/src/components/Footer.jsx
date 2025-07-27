@@ -13,7 +13,7 @@ function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* About Section */}
                     <div className="md:col-span-1">
-                        <h3 className="text-xl font-bold text-white mb-4">FastInfo</h3>
+                        <h3 className="text-xl font-bold text-white mb-4">InfoSubito</h3>
                         <p className="text-sm">
                             Il portale che ti tiene aggiornato su tutto ciò che serve: viaggi, offerte, bonus e notizie utili per l'Italia.
                         </p>

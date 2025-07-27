@@ -110,7 +110,12 @@ function UtilityNewsPage() {
 
     return (
         <>
-            <Helmet><title>Notizie Utili - Traffico, Scioperi e Emergenze</title></Helmet>
+            <Helmet>
+                <title>Notizie Utili in Tempo Reale | Traffico, Scioperi, Meteo e News | InfoSubito</title>
+                <meta name="description" content="Rimani aggiornato con le notizie utili per chi viaggia e vive in Italia: situazione del traffico, scioperi programmati, previsioni meteo e le ultime notizie del giorno." />
+                <meta property="og:title" content="Notizie Utili in Tempo Reale | Traffico, Scioperi e News" />
+                <meta property="og:description" content="Tutte le informazioni di servizio in un unico posto: viabilità, agitazioni sindacali e ultime news." />
+            </Helmet>
             <div className="bg-gray-50 py-12">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
 

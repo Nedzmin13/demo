@@ -46,9 +46,21 @@ function ItineraryDetailPage() {
         );
     }
 
+    const pageTitle = `${itinerary.title} - Itinerario di ${itinerary.duration} | InfoSubito`;
+    const metaDescription = `Esplora il nostro itinerario "${itinerary.title}". Scopri le tappe giorno per giorno, i luoghi da non perdere e i consigli per organizzare il tuo viaggio.`;
+
     return (
         <>
-            <Helmet><title>{itinerary.title} - Itinerari FastInfo</title></Helmet>
+            <Helmet>
+                <title>{pageTitle}</title>
+                <meta name="description" content={metaDescription} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={metaDescription} />
+                <meta property="og:type" content="article" />
+                {itinerary.images && itinerary.images.length > 0 && (
+                    <meta property="og:image" content={itinerary.images[0].url} />
+                )}
+            </Helmet>
             <div className="bg-gray-50">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 max-w-5xl">
                     <ImageGallery images={itinerary.images || []} />

@@ -64,7 +64,9 @@ function RegionsListPage() {
     return (
         <>
             <Helmet>
-                <title>Esplora le Regioni d'Italia - FastInfo</title>
+                <title>Guida alle Regioni d'Italia: Mappa e Informazioni | InfoSubito</title>
+                <meta name="description" content="Esplora tutte le 20 regioni d'Italia. Clicca sulla mappa o sulla lista per accedere alle guide dettagliate su cosa vedere, fare e dove andare in ogni regione." />
+                <meta property="og:title" content="Guida alle Regioni d'Italia: Mappa e Informazioni" />
             </Helmet>
             <div className="bg-gray-50 py-12">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8">

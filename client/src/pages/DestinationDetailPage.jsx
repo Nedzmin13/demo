@@ -29,9 +29,21 @@ function DestinationDetailPage() {
     if (loading) return <div className="text-center p-10">Caricamento...</div>;
     if (!destination) return <div className="text-center p-10">Destinazione non trovata.</div>;
 
+    const pageTitle = `${destination.name}, ${destination.region} - Guida | InfoSubito`;
+    const metaDescription = `Scopri ${destination.name}: cosa vedere, quando andare e consigli utili per la tua visita in ${destination.region}. La destinazione perfetta per la stagione: ${destination.season}.`;
+
     return (
         <>
-            <Helmet><title>{destination.name} - Guida e Informazioni | FastInfo</title></Helmet>
+            <Helmet>
+                <title>{pageTitle}</title>
+                <meta name="description" content={metaDescription} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={metaDescription} />
+                <meta property="og:type" content="article" />
+                {destination.images && destination.images.length > 0 && (
+                    <meta property="og:image" content={destination.images[0].url} />
+                )}
+            </Helmet>
             <div className="bg-gray-50">
                 <div className="container mx-auto py-12 px-4 max-w-5xl">
                     <div className="mb-4">

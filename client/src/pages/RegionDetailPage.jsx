@@ -67,10 +67,16 @@ function RegionDetailPage() {
         return <div className="text-center text-gray-500 py-20">Regione non trovata.</div>;
     }
 
+    const pageTitle = `Guida della Regione ${region.name} | Province e Città | InfoSubito`;
+    const metaDescription = `Scopri la regione ${region.name}: guida completa alle sue province, città principali, attrazioni e informazioni utili per il tuo viaggio.`;
+
     return (
         <>
             <Helmet>
-                <title>{region.name} - Guida e Province - FastInfo</title>
+                <title>{pageTitle}</title>
+                <meta name="description" content={metaDescription} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={metaDescription} />
             </Helmet>
 
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">

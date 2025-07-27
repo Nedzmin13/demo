@@ -30,10 +30,12 @@ function HomePage() {
     return (
         <>
             <Helmet>
-                <title>FastInfo - Viaggi, Offerte, Bonus e Notizie per l'Italia</title>
-                <meta name="description" content="Il portale che ti tiene aggiornato su tutto ciò che serve: viaggi, offerte, bonus e notizie utili per l'Italia." />
+                <title>InfoSubito - Guide, Viaggi, Bonus e Notizie per l'Italia</title>
+                <meta name="description" content="Il portale N°1 in Italia per trovare informazioni utili, guide pratiche, bonus aggiornati, offerte e destinazioni di viaggio. Tutto in un unico posto." />
+                <meta property="og:title" content="InfoSubito - Guide, Viaggi, Bonus e Notizie per l'Italia" />
+                <meta property="og:description" content="Il portale N°1 in Italia per trovare informazioni utili, guide pratiche e bonus aggiornati." />
+                <meta property="og:type" content="website" />
             </Helmet>
-
             <Hero />
 
             {/* Sezione Cards sotto l'Hero */}

@@ -39,10 +39,16 @@ function ProvinceDetailPage() {
         return <div className="text-center text-gray-500 py-20">Provincia non trovata.</div>;
     }
 
+    const pageTitle = `Guida alla Provincia di ${province.name} (${province.sigla}) | InfoSubito`;
+    const metaDescription = `Esplora i comuni e le attrazioni della provincia di ${province.name}. Informazioni utili, cosa vedere e servizi per organizzare la tua visita.`;
+
     return (
         <>
             <Helmet>
-                <title>Comuni della provincia di {province.name} ({province.sigla}) - FastInfo</title>
+                <title>{pageTitle}</title>
+                <meta name="description" content={metaDescription} />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={metaDescription} />
             </Helmet>
 
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
