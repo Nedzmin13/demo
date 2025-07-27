@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import {
     fetchDestinationsForAdmin,
     createDestination,
@@ -10,6 +10,7 @@ import {
     deleteDestinationImage
 } from '../../api';
 import { Edit, Trash2, X, Star } from 'lucide-react';
+import RichTextEditor from '../../components/admin/forms/RichTextEditor';
 
 const seasons = ["Primavera", "Estate", "Autunno", "Inverno"];
 
@@ -17,7 +18,7 @@ function AdminDestinationsPage() {
     const [destinations, setDestinations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState(null);
-    const { register, handleSubmit, reset, setValue, formState: { isSubmitting } } = useForm();
+    const { register, handleSubmit, reset, setValue, control, formState: { isSubmitting } } = useForm();
     const [currentImages, setCurrentImages] = useState([]);
 
     const loadData = async () => {
@@ -120,8 +121,16 @@ function AdminDestinationsPage() {
                             <div><label className="text-sm font-medium">Stagione *</label><select {...register('season', { required: true })} className="w-full border p-2 rounded mt-1"><option value="">Seleziona...</option>{seasons.map(s => <option key={s} value={s}>{s}</option>)}</select></div>
                             <div><label className="text-sm font-medium">Rating (da 0.0 a 5.0) *</label><input type="number" step="0.1" min="0" max="5" {...register('rating', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
                             <div><label className="text-sm font-medium">Tags (separati da virgola)</label><input {...register('tags')} className="w-full border p-2 rounded mt-1"/></div>
-                            <div><label className="text-sm font-medium">Descrizione</label><textarea {...register('description')} className="w-full border p-2 rounded mt-1" rows="3"></textarea></div>
-
+                            <div>
+                                <label className="font-semibold block mb-2">Descrizione</label>
+                                <Controller
+                                    name="description"
+                                    control={control}
+                                    defaultValue=""
+                                    render={({field}) => <RichTextEditor value={field.value}
+                                                                         onChange={field.onChange}/>}
+                                />
+                            </div>
                             <hr/>
                             <h3 className="font-semibold text-gray-800 pt-2">Immagini</h3>
                             {editing && currentImages.length > 0 && (

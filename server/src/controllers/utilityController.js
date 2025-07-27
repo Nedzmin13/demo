@@ -1,28 +1,32 @@
-// server/src/controllers/utilityController.js
 import prisma from '../config/prismaClient.js';
 
 export const getUtilityInfo = async (req, res) => {
     try {
-        // Usiamo Promise.all per eseguire le query in parallelo
-        const [trafficAlerts, transportStrikes, emergencyNumbers] = await Promise.all([
-            // NOME MODELLO CORRETTO (probabilmente tutto minuscolo)
+        // Aggiungiamo 'news' alla lista delle query parallele
+        const [trafficAlerts, transportStrikes, emergencyNumbers, news] = await Promise.all([
             prisma.trafficalert.findMany({
-                orderBy: { createdAt: 'desc' }
+                orderBy: { createdAt: 'desc' },
+                take: 4 // Prendiamo solo le ultime 4 allerte traffico
             }),
-            // NOME MODELLO CORRETTO
             prisma.transportstrike.findMany({
-                orderBy: { date: 'asc' }
+                orderBy: { date: 'asc' },
+                take: 4 // Prendiamo solo i prossimi 4 scioperi
             }),
-            // NOME MODELLO CORRETTO
             prisma.emergencynumber.findMany({
                 orderBy: { order: 'asc' }
+            }),
+            // --- NUOVA QUERY ---
+            prisma.news.findMany({
+                orderBy: { publishedAt: 'desc' },
+                take: 6 // Prendiamo le ultime 6 notizie
             })
         ]);
 
         res.status(200).json({
             traffic: trafficAlerts,
             strikes: transportStrikes,
-            emergency: emergencyNumbers
+            emergency: emergencyNumbers,
+            news: news // --- AGGIUNGIAMO LE NOTIZIE ALLA RISPOSTA ---
         });
 
     } catch (error) {

@@ -1,6 +1,11 @@
 // server/src/controllers/bonusesController.js
 import prisma from '../config/prismaClient.js';
 
+const handleDate = (dateString) => {
+    if (!dateString || dateString === '') return null;
+    return new Date(dateString);
+};
+
 // @desc   Recupera tutti i bonus (con filtro per la pagina pubblica)
 // @route  GET /api/bonuses
 // @access Public
@@ -24,25 +29,28 @@ const createBonus = async (req, res) => {
     const { title, description, amount, category, target, expiresAt, howToApply } = req.body;
     try {
         const bonus = await prisma.bonus.create({
-            data: { title, description, amount, category, target, expiresAt: new Date(expiresAt), howToApply }
+            data: { title, description, amount, category, target, expiresAt: handleDate(expiresAt), howToApply }
         });
         res.status(201).json(bonus);
-    } catch (error) { res.status(500).json({ message: 'Errore del server.' }); }
+    } catch (error) {
+        console.error("Errore creazione bonus:", error);
+        res.status(500).json({ message: 'Errore del server.' });
+    }
 };
 
-// @desc   Aggiorna un bonus
-// @route  PUT /api/bonuses/admin/:id
-// @access Private
 const updateBonus = async (req, res) => {
     const bonusId = parseInt(req.params.id);
     const { title, description, amount, category, target, expiresAt, howToApply } = req.body;
     try {
         const updatedBonus = await prisma.bonus.update({
             where: { id: bonusId },
-            data: { title, description, amount, category, target, expiresAt: new Date(expiresAt), howToApply }
+            data: { title, description, amount, category, target, expiresAt: handleDate(expiresAt), howToApply }
         });
         res.status(200).json(updatedBonus);
-    } catch (error) { res.status(500).json({ message: 'Errore del server.' }); }
+    } catch (error) {
+        console.error("Errore aggiornamento bonus:", error);
+        res.status(500).json({ message: 'Errore del server.' });
+    }
 };
 
 // @desc   Elimina un bonus

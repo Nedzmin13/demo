@@ -1,6 +1,14 @@
 import prisma from '../config/prismaClient.js';
 import cloudinary from '../config/cloudinary.js';
 
+const toNull = (value) => (value === '' || value === undefined ? null : value);
+
+const uploadImageToCloudinary = async (file) => {
+    const b64 = Buffer.from(file.buffer).toString("base64");
+    let dataURI = `data:${file.mimetype};base64,${b64}`;
+    return cloudinary.uploader.upload(dataURI, { folder: "fastinfo_itineraries" });
+};
+
 // --- DEFINIZIONE DI TUTTE LE FUNZIONI (SENZA 'export' QUI) ---
 
 const getAllItineraries = async (req, res) => {
@@ -30,12 +38,26 @@ const getItineraryById = async (req, res) => {
 const createItinerary = async (req, res) => {
     const { title, description, region, duration, isPopular, steps } = req.body;
     try {
-        const newItinerary = await prisma.itinerary.create({
-            data: {
-                title, description, region, duration,
-                isPopular: isPopular === 'true',
-                steps: { create: JSON.parse(steps || '[]') }
+        const newItinerary = await prisma.$transaction(async (tx) => {
+            const itinerary = await tx.itinerary.create({
+                data: {
+                    title, region, duration,
+                    description: toNull(description),
+                    isPopular: isPopular === 'true',
+                    steps: { create: JSON.parse(steps || '[]') }
+                }
+            });
+            if (req.files && req.files.length > 0) {
+                const uploadPromises = req.files.map(file => uploadImageToCloudinary(file));
+                const uploadResults = await Promise.all(uploadPromises);
+                await tx.itineraryImage.createMany({
+                    data: uploadResults.map(result => ({
+                        url: result.secure_url,
+                        itineraryId: itinerary.id
+                    }))
+                });
             }
+            return tx.itinerary.findUnique({ where: { id: itinerary.id }, include: { images: true, steps: true } });
         });
         res.status(201).json(newItinerary);
     } catch (error) {
@@ -48,21 +70,27 @@ const updateItinerary = async (req, res) => {
     const id = parseInt(req.params.id);
     const { title, description, region, duration, isPopular, steps } = req.body;
     try {
-        const parsedSteps = JSON.parse(steps || '[]').map(step => ({
-            day: step.day,
-            title: step.title,
-            description: step.description
-        }));
         await prisma.$transaction(async (tx) => {
             await tx.itineraryStep.deleteMany({ where: { itineraryId: id } });
             await tx.itinerary.update({
                 where: { id },
                 data: {
-                    title, description, region, duration,
+                    title, region, duration,
+                    description: toNull(description),
                     isPopular: isPopular === 'true',
-                    steps: { create: parsedSteps }
+                    steps: { create: JSON.parse(steps || '[]') }
                 }
             });
+            if (req.files && req.files.length > 0) {
+                const uploadPromises = req.files.map(file => uploadImageToCloudinary(file));
+                const uploadResults = await Promise.all(uploadPromises);
+                await tx.itineraryImage.createMany({
+                    data: uploadResults.map(result => ({
+                        url: result.secure_url,
+                        itineraryId: id
+                    }))
+                });
+            }
         });
         res.status(200).json({ message: 'Itinerario aggiornato' });
     } catch (error) {
@@ -88,14 +116,12 @@ const addItineraryImages = async (req, res) => {
             const b64 = Buffer.from(file.buffer).toString("base64");
             let dataURI = "data:" + file.mimetype + ";base64," + b64;
             const result = await cloudinary.uploader.upload(dataURI, { folder: "fastinfo_itineraries" });
-
-            await prisma.itineraryImage.create({
-                data: { url: result.secure_url, itineraryId: itineraryId }
-            });
+            await prisma.itineraryImage.create({ data: { url: result.secure_url, itineraryId: itineraryId } });
         }
         res.status(201).json({ message: 'Immagini aggiunte.' });
     } catch (error) { res.status(500).json({ message: "Errore del server" }); }
 };
+
 
 const deleteItineraryImage = async (req, res) => {
     const imageId = parseInt(req.params.imageId);

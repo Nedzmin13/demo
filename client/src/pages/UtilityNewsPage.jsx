@@ -1,10 +1,10 @@
-// client/src/pages/UtilityNewsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { fetchUtilityInfo } from '../api';
-import { Train, Car, Phone, TriangleAlert, Thermometer, Droplet, Wind } from 'lucide-react';
+import { Train, Car, Phone, TriangleAlert, Thermometer, Droplet, Wind, Newspaper, Plus } from 'lucide-react'; // <-- Importa Newspaper, Plus
+import { Link } from 'react-router-dom'; // <-- Importa Link
 import axios from 'axios';
-
+import NewsPreviewCard from '../components/NewsPreviewCard';
 // --- Componenti Specifici per questa Pagina ---
 
 // Componente Meteo Migliorato
@@ -91,7 +91,7 @@ const EmergencyNumberCard = ({ num }) => (
 
 // --- Pagina Principale ---
 function UtilityNewsPage() {
-    const [utilityData, setUtilityData] = useState({ traffic: [], strikes: [], emergency: [] });
+    const [utilityData, setUtilityData] = useState({ traffic: [], strikes: [], emergency: [], news: [] });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -116,40 +116,59 @@ function UtilityNewsPage() {
 
                     {/* Sezione Meteo */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <WeatherWidget city="Milan" />
-                        <WeatherWidget city="Rome" />
-                        <WeatherWidget city="Naples" />
-                        <WeatherWidget city="Florence" />
+                        <WeatherWidget city="Milan"/>
+                        <WeatherWidget city="Rome"/>
+                        <WeatherWidget city="Naples"/>
+                        <WeatherWidget city="Florence"/>
                     </div>
 
                     {/* Sezione Numeri di Emergenza */}
                     <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Phone className="text-red-600"/> Numeri di Emergenza</h2>
+                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Phone
+                            className="text-red-600"/> Numeri di Emergenza</h2>
                         {loading ? <p>Caricamento...</p> : utilityData.emergency.length > 0 ? (
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                {utilityData.emergency.map(num => <EmergencyNumberCard key={num.id} num={num} />)}
+                                {utilityData.emergency.map(num => <EmergencyNumberCard key={num.id} num={num}/>)}
                             </div>
-                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessun numero di emergenza disponibile.</p>}
+                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessun numero di emergenza
+                            disponibile.</p>}
                     </div>
 
                     {/* Sezione Scioperi */}
                     <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Train className="text-orange-500"/> Scioperi Trasporti</h2>
+                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Train
+                            className="text-orange-500"/> Scioperi Trasporti</h2>
                         {loading ? <p>Caricamento...</p> : utilityData.strikes.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {utilityData.strikes.map(strike => <StrikeCard key={strike.id} strike={strike} />)}
+                                {utilityData.strikes.map(strike => <StrikeCard key={strike.id} strike={strike}/>)}
                             </div>
-                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessuno sciopero previsto al momento.</p>}
+                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessuno sciopero previsto al
+                            momento.</p>}
+                    </div>
+
+                    <div>
+                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><Newspaper
+                            className="text-sky-600"/> Ultime Notizie</h2>
+                        {loading ? <p>Caricamento...</p> : utilityData.news && utilityData.news.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {utilityData.news.map(newsItem => (
+                                    <NewsPreviewCard key={newsItem.id} news={newsItem}/>
+                                ))}
+                            </div>
+                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessuna notizia disponibile
+                            al momento.</p>}
                     </div>
 
                     {/* Sezione Traffico */}
                     <div>
-                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><TriangleAlert className="text-red-500"/> Traffico e Viabilità</h2>
+                        <h2 className="text-3xl font-bold mb-6 flex items-center gap-3"><TriangleAlert
+                            className="text-red-500"/> Traffico e Viabilità</h2>
                         {loading ? <p>Caricamento...</p> : utilityData.traffic.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {utilityData.traffic.map(alert => <TrafficCard key={alert.id} alert={alert} />)}
+                                {utilityData.traffic.map(alert => <TrafficCard key={alert.id} alert={alert}/>)}
                             </div>
-                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessuna segnalazione di traffico rilevante.</p>}
+                        ) : <p className="bg-white p-6 rounded-xl shadow-sm text-gray-500">Nessuna segnalazione di
+                            traffico rilevante.</p>}
                     </div>
 
 

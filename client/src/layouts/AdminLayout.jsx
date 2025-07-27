@@ -4,7 +4,7 @@ import { Outlet, Link, NavLink, useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import {
     LayoutDashboard, Newspaper, Tag, Gift, Map, MapPin, Building, Route as RouteIcon,
-    Zap, AlertTriangle, TrafficCone, Star, LogOut
+    Zap, AlertTriangle, TrafficCone, Star, LogOut, BookOpen, Wrench
 } from 'lucide-react';
 
 const SidebarLink = ({ to, icon, children }) => {
@@ -47,6 +47,9 @@ function AdminLayout() {
                     <p className="px-4 pt-4 pb-2 text-xs font-semibold text-gray-400 uppercase">Contenuti</p>
                     <SidebarLink to="/admin/itinerari" icon={<RouteIcon size={18}/>}>Itinerari</SidebarLink>
                     <SidebarLink to="/admin/destinazioni" icon={<Star size={18}/>}>Destinazioni</SidebarLink>
+                    <SidebarLink to="/admin/guide" icon={<BookOpen size={18}/>}>Pratiche Utili</SidebarLink>
+                    <SidebarLink to="/admin/howto" icon={<Wrench size={18}/>}>Come Fare</SidebarLink>
+
 
                     <p className="px-4 pt-4 pb-2 text-xs font-semibold text-gray-400 uppercase">Utilità</p>
                     <SidebarLink to="/admin/scioperi" icon={<AlertTriangle size={18}/>}>Scioperi</SidebarLink>

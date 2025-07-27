@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { fetchComuneBySlug } from '../api';
 import { ChevronRight, HeartHandshake, Utensils, Eye, AlertTriangle, BedDouble } from 'lucide-react';
@@ -90,15 +90,23 @@ function ComuneDetailPage() {
                         <ImageGallery images={comune.images || []} />
                     </div>
 
+                    {comune.images && comune.images.length > 0 && comune.images[0].attribution && (
+                        <div className="text-xs text-gray-500 text-right -mt-6 mb-6 px-2 italic">
+                            <p>{comune.images[0].attribution}</p>
+                        </div>
+                    )}
+
                     <div className="bg-white p-8 rounded-lg shadow-lg">
                         {regionName && provinceSigla && (
                             <nav className="flex items-center text-sm text-gray-500 mb-6 flex-wrap">
                                 <Link to="/viaggio" className="hover:underline">Viaggio</Link>
-                                <ChevronRight size={16} className="mx-2" />
-                                <Link to={`/viaggio/${regionName}`} className="hover:underline">{capitalize(regionName)}</Link>
-                                <ChevronRight size={16} className="mx-2" />
-                                <Link to={`/viaggio/${regionName}/${provinceSigla}`} className="hover:underline">{comune.province?.name}</Link>
-                                <ChevronRight size={16} className="mx-2" />
+                                <ChevronRight size={16} className="mx-2"/>
+                                <Link to={`/viaggio/${regionName}`}
+                                      className="hover:underline">{capitalize(regionName)}</Link>
+                                <ChevronRight size={16} className="mx-2"/>
+                                <Link to={`/viaggio/${regionName}/${provinceSigla}`}
+                                      className="hover:underline">{comune.province?.name}</Link>
+                                <ChevronRight size={16} className="mx-2"/>
                                 <span className="font-semibold text-gray-700">{comune.name}</span>
                             </nav>
                         )}
@@ -108,48 +116,53 @@ function ComuneDetailPage() {
                             <p className="text-lg text-gray-500">{comune.province?.name}, {comune.province?.sigla}</p>
                         </div>
 
-                        <div className="prose max-w-none text-gray-700 leading-relaxed">
-                            <p>{fullDescription}</p>
-                        </div>
-
+                        <div
+                            className="prose max-w-none text-gray-700 leading-relaxed"
+                            dangerouslySetInnerHTML={{__html: comune.description}}
+                        />
                         <hr className="my-10"/>
 
                         <h2 className="text-3xl font-bold text-gray-800 mb-6">Informazioni e Servizi</h2>
                         <div className="flex space-x-2 sm:space-x-4 border-b pb-4 mb-8 overflow-x-auto">
-                            <TabButton id="servizi" label="Servizi Essenziali" icon={<HeartHandshake size={20} />} />
-                            <TabButton id="ristorazione" label="Ristorazione" icon={<Utensils size={20} />} />
-                            <TabButton id="alloggiare" label="Alloggiare" icon={<BedDouble size={20} />} />
-                            <TabButton id="vedere" label="Cosa Vedere" icon={<Eye size={20} />} />
-                            <TabButton id="emergenze" label="Emergenze" icon={<AlertTriangle size={20} />} />
+                            <TabButton id="servizi" label="Servizi Essenziali" icon={<HeartHandshake size={20}/>}/>
+                            <TabButton id="ristorazione" label="Ristorazione" icon={<Utensils size={20}/>}/>
+                            <TabButton id="alloggiare" label="Alloggiare" icon={<BedDouble size={20}/>}/>
+                            <TabButton id="vedere" label="Cosa Vedere" icon={<Eye size={20}/>}/>
+                            <TabButton id="emergenze" label="Emergenze" icon={<AlertTriangle size={20}/>}/>
                         </div>
 
                         <div>
                             {activeTab === 'servizi' && (
                                 <div>
-                                    <PoiSection title="Distributori di Carburante" pois={comune.pointofinterest} category="FuelStation" />
-                                    <PoiSection title="Supermercati" pois={comune.pointofinterest} category="Supermarket" />
-                                    <PoiSection title="Parcheggi" pois={comune.pointofinterest} category="Parking" />
+                                    <PoiSection title="Distributori di Carburante" pois={comune.pointofinterest}
+                                                category="FuelStation"/>
+                                    <PoiSection title="Supermercati" pois={comune.pointofinterest}
+                                                category="Supermarket"/>
+                                    <PoiSection title="Parcheggi" pois={comune.pointofinterest} category="Parking"/>
                                 </div>
                             )}
                             {activeTab === 'ristorazione' && (
                                 <div>
-                                    <PoiSection title="Ristoranti" pois={comune.pointofinterest} category="Restaurant" />
-                                    <PoiSection title="Bar" pois={comune.pointofinterest} category="Bar" />
+                                    <PoiSection title="Ristoranti" pois={comune.pointofinterest} category="Restaurant"/>
+                                    <PoiSection title="Bar" pois={comune.pointofinterest} category="Bar"/>
                                 </div>
                             )}
                             {activeTab === 'alloggiare' && (
                                 <div>
-                                    <PoiSection title="Hotel, B&B e Alloggi" pois={comune.pointofinterest} category="Accommodation" />
+                                    <PoiSection title="Hotel, B&B e Alloggi" pois={comune.pointofinterest}
+                                                category="Accommodation"/>
                                 </div>
                             )}
                             {activeTab === 'vedere' && (
                                 <div>
-                                    <PoiSection title="Attrazioni Turistiche" pois={comune.pointofinterest} category="TouristAttraction" />
+                                    <PoiSection title="Attrazioni Turistiche" pois={comune.pointofinterest}
+                                                category="TouristAttraction"/>
                                 </div>
                             )}
                             {activeTab === 'emergenze' && (
                                 <div>
-                                    <PoiSection title="Servizi di Emergenza" pois={comune.pointofinterest} category="EmergencyService" />
+                                    <PoiSection title="Servizi di Emergenza" pois={comune.pointofinterest}
+                                                category="EmergencyService"/>
                                 </div>
                             )}
                         </div>

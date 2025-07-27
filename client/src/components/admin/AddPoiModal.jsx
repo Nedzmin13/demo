@@ -1,7 +1,8 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { X } from 'lucide-react';
 import { createPoi } from '../../api';
+import RichTextEditor from './forms/RichTextEditor';
 
 const categories = ["Restaurant", "FuelStation", "Supermarket", "Bar", "Parking", "TouristAttraction", "EmergencyService", "Accommodation"];
 
@@ -63,7 +64,7 @@ const SpecificFields = ({ category, register, watch }) => {
 };
 
 function AddPoiModal({ comuneId, onClose, onPoiAdded }) {
-    const { register, handleSubmit, watch, formState: { isSubmitting } } = useForm();
+    const { register, handleSubmit, watch, control, formState: { isSubmitting } } = useForm();
     const selectedCategory = watch("category");
     const onSubmit = async (data) => {
         const formData = new FormData();
@@ -94,8 +95,17 @@ function AddPoiModal({ comuneId, onClose, onPoiAdded }) {
                     <div><label>Indirizzo *</label><input {...register('address', { required: true })} className="w-full border p-2 rounded mt-1"/></div>
                     <div><label>Categoria *</label><select {...register('category', { required: true })} className="w-full border p-2 rounded mt-1"><option value="">Seleziona...</option>{categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}</select></div>
                     <div><label>Orari di Apertura</label><input {...register('openingHours')} className="w-full border p-2 rounded mt-1"/></div>
-                    <div><label>Descrizione</label><textarea {...register('description')} className="w-full border p-2 rounded mt-1"></textarea></div>
-                    <div><label>Sito Web</label><input {...register('website')} className="w-full border p-2 rounded mt-1"/></div>
+                    <div>
+                        <label className="font-semibold block mb-2">Descrizione</label>
+                        <Controller
+                            name="description"
+                            control={control}
+                            defaultValue=""
+                            render={({field}) => <RichTextEditor value={field.value} onChange={field.onChange}/>}
+                        />
+                    </div>
+                    <div><label>Sito Web</label><input {...register('website')}
+                                                       className="w-full border p-2 rounded mt-1"/></div>
                     <div><label>Telefono</label><input {...register('phoneNumber')} className="w-full border p-2 rounded mt-1"/></div>
                     <hr />
                     {selectedCategory && <h3 className="font-bold text-lg">Dettagli per: {selectedCategory}</h3>}

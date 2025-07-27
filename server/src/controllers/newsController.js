@@ -65,3 +65,15 @@ export const deleteNews = async (req, res) => {
         res.status(200).json({ message: "Notizia eliminata" });
     } catch (error) { res.status(500).json({ message: "Errore server" }); }
 };
+
+export const getNewsById = async (req, res) => {
+    try {
+        const news = await prisma.news.findUnique({
+            where: { id: parseInt(req.params.id) }
+        });
+        if (!news) return res.status(404).json({ message: "Notizia non trovata" });
+        res.json(news);
+    } catch (error) {
+        res.status(500).json({ message: "Errore del server" });
+    }
+};

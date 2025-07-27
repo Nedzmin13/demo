@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom'; // <-- LA CORREZIONE È QUI
+import { Link } from 'react-router-dom';
 import { fetchBonuses } from '../api';
 import { Gift, Target, Calendar, Home, Briefcase, Car, FileText, Users } from 'lucide-react';
 
@@ -13,11 +13,17 @@ const bonusCategories = [
 ];
 
 const BonusCard = ({ bonus }) => {
-    // Funzione per tagliare il testo e aggiungere "..."
-    const truncateText = (text, maxLength) => {
-        if (!text) return '';
-        if (text.length <= maxLength) return text;
-        return text.substr(0, maxLength) + '...';
+    // --- NUOVA FUNZIONE PER GESTIRE L'HTML ---
+    const createMarkup = (htmlContent, maxLength) => {
+        if (!htmlContent) return { __html: '' };
+        // Rimuove i tag HTML per calcolare la lunghezza del testo puro
+        const plainText = htmlContent.replace(/<[^>]*>?/gm, '');
+        if (plainText.length <= maxLength) {
+            return { __html: htmlContent };
+        }
+        // Taglia il testo e aggiunge "..."
+        const truncatedText = plainText.substr(0, maxLength);
+        return { __html: truncatedText + '...' };
     };
 
     return (
@@ -31,11 +37,11 @@ const BonusCard = ({ bonus }) => {
             </div>
             <h3 className="text-xl font-bold text-gray-900">{bonus.title}</h3>
 
-            {/* --- CORREZIONE QUI --- */}
-            {/* Usiamo la funzione truncateText per limitare la descrizione a 100 caratteri */}
-            <p className="text-gray-600 my-2 flex-grow min-h-[60px]">
-                {truncateText(bonus.description, 100)}
-            </p>
+            {/* --- ECCO LA CORREZIONE FONDAMENTALE --- */}
+            <div
+                className="text-gray-600 my-2 flex-grow min-h-[60px] text-sm prose prose-p:my-1"
+                dangerouslySetInnerHTML={createMarkup(bonus.description, 100)}
+            />
 
             <div className="text-sm space-y-2 mt-auto border-t border-gray-100 pt-4">
                 <p className="flex items-center gap-2 text-gray-500"><Target size={16}/> <strong>Target:</strong> {bonus.target || 'Non specificato'}</p>

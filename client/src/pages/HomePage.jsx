@@ -56,8 +56,7 @@ function HomePage() {
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                         {loading ? <p>Caricamento notizie...</p> : latestNews.map(news => (
-                            <NewsPreviewCard key={news.id} title={news.title} imageUrl={news.imageUrl} />
-                        ))}
+                            <NewsPreviewCard key={news.id} news={news} />                        ))}
 
                         <div className="border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center p-8 hover:border-sky-500 hover:bg-gray-50 transition-all">
                             <div className="bg-gray-200 rounded-full p-3 mb-4">
@@ -65,7 +64,7 @@ function HomePage() {
                             </div>
                             <h3 className="font-semibold text-lg text-gray-800">Altre novità</h3>
                             <p className="text-gray-500 mt-1">Scopri tutte le ultime notizie</p>
-                            <Link to="/notizie" className="mt-4 text-sky-600 font-semibold hover:underline">
+                            <Link to="/notizie-utili" className="mt-4 text-sky-600 font-semibold hover:underline">
                                 Vedi tutte
                             </Link>
                         </div>

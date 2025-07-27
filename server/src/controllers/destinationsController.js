@@ -1,6 +1,9 @@
 import prisma from '../config/prismaClient.js';
 import cloudinary from '../config/cloudinary.js';
 
+const toNull = (value) => (value === '' || value === undefined ? null : value);
+
+
 // --- Funzioni Pubbliche ---
 const getDestinationsBySeason = async (req, res) => {
     const { season } = req.query;
@@ -43,7 +46,7 @@ const createDestination = async (req, res) => {
     try {
         const destination = await prisma.destination.create({
             data: {
-                name, region, description, tags, season, rating: parseFloat(rating),
+                name, region,  description: toNull(description),  tags: toNull(tags), season, rating: parseFloat(rating),
                 images: { create: (JSON.parse(imageUrls || '[]')).map(url => ({ url })) }
             }
         });
@@ -66,7 +69,7 @@ const updateDestination = async (req, res) => {
     try {
         const destination = await prisma.destination.update({
             where: { id },
-            data: { name, region, description, tags, season, rating: parseFloat(rating) }
+            data: { name, region, description: toNull(description), tags: toNull(tags), season, rating: parseFloat(rating) }
         });
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {

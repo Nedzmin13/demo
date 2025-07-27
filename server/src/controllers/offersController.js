@@ -1,11 +1,15 @@
 import prisma from '../config/prismaClient.js';
 import cloudinary from '../config/cloudinary.js';
 
+
 const uploadImageToCloudinary = async (file) => {
     const b64 = Buffer.from(file.buffer).toString("base64");
     let dataURI = `data:${file.mimetype};base64,${b64}`;
     return cloudinary.uploader.upload(dataURI, { folder: "fastinfo_offers" });
 };
+
+const toNull = (value) => (value === '' || value === undefined ? null : value);
+
 
 const getAllOffers = async (req, res) => {
     const { category, search } = req.query;
@@ -63,29 +67,25 @@ const createOffer = async (req, res) => {
     try {
         const newOffer = await prisma.$transaction(async (tx) => {
             const createdOffer = await tx.offer.create({
-                data: { title, description, discount, store, category, link }
+                data: {
+                    title,
+                    description: toNull(description),
+                    discount, store, category, link
+                }
             });
             if (req.files && req.files.length > 0) {
-                // ASSICURATI CHE IL NOME QUI SIA CORRETTO
                 const uploadPromises = req.files.map(file => uploadImageToCloudinary(file));
                 const uploadResults = await Promise.all(uploadPromises);
                 await tx.offerImage.createMany({
-                    data: uploadResults.map(result => ({
-                        url: result.secure_url,
-                        offerId: createdOffer.id
-                    }))
+                    data: uploadResults.map(r => ({ url: r.secure_url, offerId: createdOffer.id }))
                 });
             }
             return tx.offer.findUnique({ where: { id: createdOffer.id }, include: { images: true } });
         });
         res.status(201).json(newOffer);
-    } catch (error) {
-        console.error("Errore creazione offerta:", error);
-        res.status(500).json({ message: "Errore durante la creazione dell'offerta." });
-    }
+    } catch (error) { res.status(500).json({ message: "Errore durante la creazione." }); }
 };
 
-// --- Logica di Aggiornamento ---
 const updateOffer = async (req, res) => {
     const id = parseInt(req.params.id);
     const { title, description, discount, store, category, link } = req.body;
@@ -93,26 +93,23 @@ const updateOffer = async (req, res) => {
         const updatedOffer = await prisma.$transaction(async (tx) => {
             await tx.offer.update({
                 where: { id },
-                data: { title, description, discount, store, category, link }
+                data: {
+                    title,
+                    description: toNull(description),
+                    discount, store, category, link
+                }
             });
             if (req.files && req.files.length > 0) {
-                // ASSICURATI CHE IL NOME QUI SIA CORRETTO
                 const uploadPromises = req.files.map(file => uploadImageToCloudinary(file));
                 const uploadResults = await Promise.all(uploadPromises);
                 await tx.offerImage.createMany({
-                    data: uploadResults.map(result => ({
-                        url: result.secure_url,
-                        offerId: id
-                    }))
+                    data: uploadResults.map(r => ({ url: r.secure_url, offerId: id }))
                 });
             }
             return tx.offer.findUnique({ where: { id }, include: { images: true } });
         });
         res.status(200).json(updatedOffer);
-    } catch (error) {
-        console.error("Errore aggiornamento offerta:", error);
-        res.status(500).json({ message: "Errore durante l'aggiornamento dell'offerta." });
-    }
+    } catch (error) { res.status(500).json({ message: "Errore durante l'aggiornamento." }); }
 };
 
 const deleteOffer = async (req, res) => {

@@ -8,6 +8,7 @@ const uploadImageToCloudinary = async (file) => {
     return cloudinary.uploader.upload(dataURI, { folder: "fastinfo_comuni" });
 };
 
+const toNull = (value) => (value === '' || value === undefined ? null : value);
 
 // =======================================================
 // ---                ROTTE PUBBLICHE                  ---
@@ -18,8 +19,15 @@ const getComuneBySlug = async (req, res) => {
         const comune = await prisma.comune.findUnique({
             where: { slug: req.params.slug },
             include: {
-                province: true,
-                images: true,
+                province: { include: { region: true } },
+                // --- QUESTA È LA CORREZIONE ---
+                images: {
+                    select: {
+                        id: true,
+                        url: true,
+                        attribution: true // Seleziona 'attribution' DENTRO 'images'
+                    }
+                },
                 pointofinterest: {
                     orderBy: { name: 'asc' }
                 }
@@ -90,38 +98,41 @@ const getComuneByIdForAdmin = async (req, res) => {
             where: { id: parseInt(req.params.id) },
             include: {
                 province: true,
-                images: true,
-                pointofinterest: { orderBy: { name: 'asc' } }
+                images: { // Corretto anche qui per coerenza
+                    select: { id: true, url: true, attribution: true }
+                },
+                pointofinterest: true
             }
         });
-        if (!comune) {
-            return res.status(404).json({ message: "Comune non trovato" });
-        }
+        if (!comune) return res.status(404).json({ message: "Comune non trovato" });
         res.status(200).json(comune);
-    } catch (error) {
-        console.error(`Errore nel recuperare il comune con ID ${req.params.id}:`, error);
-        res.status(500).json({ message: "Errore del server" });
-    }
+    } catch (error) { res.status(500).json({ message: "Errore del server" }); }
 };
 
 const updateComune = async (req, res) => {
     const id = parseInt(req.params.id);
+    // Prendiamo 'description' dal body. req.files gestirà le immagini.
     const { name, description } = req.body;
 
     try {
         const updatedComune = await prisma.$transaction(async (tx) => {
             await tx.comune.update({
                 where: { id },
-                data: { name, description }
+                // Usiamo toNull per salvare NULL se la descrizione è vuota
+                data: { name, description: toNull(description) }
             });
 
             if (req.files && req.files.length > 0) {
                 const uploadPromises = req.files.map(file => uploadImageToCloudinary(file));
                 const uploadResults = await Promise.all(uploadPromises);
+
+                // Lo script per popolare le immagini ora aggiunge l'attribuzione.
+                // Per le immagini caricate manualmente, l'attribuzione sarà null di default.
                 await tx.comuneImage.createMany({
                     data: uploadResults.map(result => ({
                         url: result.secure_url,
                         comuneId: id
+                        // 'attribution' non è specificato, quindi sarà null
                     }))
                 });
             }
@@ -131,7 +142,6 @@ const updateComune = async (req, res) => {
                 include: { images: true, province: true, pointofinterest: true }
             });
         });
-
         res.status(200).json(updatedComune);
     } catch (error) {
         console.error("Errore aggiornamento comune:", error);
@@ -154,11 +164,29 @@ const deleteComuneImage = async (req, res) => {
     }
 };
 
+export const updateComuneImage = async (req, res) => {
+    const imageId = parseInt(req.params.imageId);
+    const { attribution } = req.body; // Prendiamo solo il campo attribution
+
+    try {
+        const updatedImage = await prisma.comuneImage.update({
+            where: { id: imageId },
+            data: {
+                attribution: attribution,
+            },
+        });
+        res.status(200).json(updatedImage);
+    } catch (error) {
+        console.error("Errore aggiornamento immagine comune:", error);
+        res.status(500).json({ message: "Errore del server" });
+    }
+};
+
 // --- BLOCCO EXPORT CORRETTO ---
 export {
     getComuneBySlug, // <-- AGGIUNTO L'EXPORT MANCANTE
     getAllComuniForAdmin,
     getComuneByIdForAdmin,
     updateComune,
-    deleteComuneImage
+    deleteComuneImage,
 };

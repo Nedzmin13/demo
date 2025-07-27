@@ -13,23 +13,23 @@ import upload from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
-// --- Rotte Pubbliche ---
 router.route('/').get(getAllItineraries);
 router.route('/:id').get(getItineraryById);
 
 // --- Rotte Admin ---
-// La rotta per ottenere la lista per l'admin riutilizza la funzione pubblica 'getAllItineraries'
 router.route('/admin/all').get(protect, getAllItineraries);
 
+// La creazione riceve testo e file con nome 'images'
 router.route('/admin').post(protect, upload.array('images'), createItinerary);
 
 router.route('/admin/:id')
     .get(protect, getItineraryById)
-    .put(protect, upload.array('newImages'), updateItinerary)
+    // --- CORREZIONE QUI: Usa 'images' anche per l'update ---
+    .put(protect, upload.array('images'), updateItinerary)
     .delete(protect, deleteItinerary);
 
-router.route('/admin/:id/images')
-    .post(protect, upload.array('images'), addItineraryImages);
+// Questa rotta non è più necessaria perché l'update gestisce già le immagini
+// router.route('/admin/:id/images')...
 
 router.route('/admin/images/:imageId')
     .delete(protect, deleteItineraryImage);

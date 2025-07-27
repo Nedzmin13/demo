@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { fetchDestinationById } from '../api';
-import { Star, MapPin, Tag } from 'lucide-react';
-import { ImageGallery } from '../components/ImageGallery'; // <-- IMPORTIAMO LA NUOVA GALLERIA
+import { ImageGallery } from '../components/ImageGallery';
+import { Star, MapPin } from 'lucide-react';
 
 function DestinationDetailPage() {
     const { id } = useParams();
@@ -11,46 +11,65 @@ function DestinationDetailPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadData = async () => {
+        const loadDestination = async () => {
+            if (!id) return;
+            setLoading(true);
             try {
-                const res = await fetchDestinationById(id);
-                setDestination(res.data);
-            } catch (error) { console.error(error); }
-            finally { setLoading(false); }
+                const response = await fetchDestinationById(id);
+                setDestination(response.data);
+            } catch (error) {
+                console.error("Errore nel caricare la destinazione:", error);
+            } finally {
+                setLoading(false);
+            }
         };
-        loadData();
+        loadDestination();
     }, [id]);
 
-    if (loading) return <div>Caricamento...</div>;
-    if (!destination) return <div>Destinazione non trovata.</div>;
+    if (loading) return <div className="text-center p-10">Caricamento...</div>;
+    if (!destination) return <div className="text-center p-10">Destinazione non trovata.</div>;
 
     return (
         <>
-            <Helmet><title>{destination.name} - FastInfo</title></Helmet>
+            <Helmet><title>{destination.name} - Guida e Informazioni | FastInfo</title></Helmet>
             <div className="bg-gray-50">
                 <div className="container mx-auto py-12 px-4 max-w-5xl">
+                    <div className="mb-4">
+                        <Link to="/top-destinazioni" className="text-sm text-purple-600 hover:underline">
+                            ← Torna a Top Destinazioni
+                        </Link>
+                    </div>
 
-                    {/* --- SOSTITUIAMO LA VECCHIA GRIGLIA CON IL NUOVO COMPONENTE --- */}
-                    <ImageGallery images={destination.images} />
+                    <ImageGallery images={destination.images || []} />
 
-                    <div className="bg-white p-8 rounded-b-lg shadow-lg">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <h1 className="text-4xl font-extrabold text-gray-900">{destination.name}</h1>
-                                <p className="text-lg text-gray-500 flex items-center gap-2 mt-1"><MapPin size={18}/> {destination.region}</p>
-                            </div>
-                            <div className="flex items-center gap-1 bg-yellow-400 text-white font-bold px-3 py-1.5 rounded-full text-lg">
-                                <Star size={18} className="fill-white"/> {destination.rating.toFixed(1)}
+                    <div className="bg-white p-6 md:p-8 rounded-b-lg shadow-lg -mt-2 relative">
+                        <div className="flex justify-between items-center flex-wrap gap-4">
+                            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900">{destination.name}</h1>
+                            <div className="flex items-center gap-1 bg-yellow-400 text-white font-bold px-3 py-1.5 rounded-full text-md">
+                                <Star size={16} className="fill-white"/> {destination.rating.toFixed(1)}
                             </div>
                         </div>
+                        <p className="text-md text-gray-500 flex items-center gap-2 mt-1">
+                            <MapPin size={16}/> {destination.region}
+                        </p>
                         <hr className="my-6"/>
-                        <p className="text-gray-700 leading-relaxed">{destination.description}</p>
+
+                        {/* --- ECCO LA CORREZIONE --- */}
+                        <div
+                            className="prose max-w-none text-gray-700 prose-p:my-2"
+                            dangerouslySetInnerHTML={{ __html: destination.description || 'Nessuna descrizione disponibile.' }}
+                        />
+
                         {destination.tags && (
-                            <div className="mt-6 flex items-center gap-2 flex-wrap">
-                                <Tag size={16} className="text-gray-400"/>
-                                {destination.tags.split(',').map(tag => (
-                                    <span key={tag} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs font-semibold">{tag.trim()}</span>
-                                ))}
+                            <div className="mt-8 border-t pt-6">
+                                <h3 className="font-bold mb-2">Tags:</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {destination.tags.split(',').map(tag => (
+                                        <span key={tag} className="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-1 rounded-full">
+                                            {tag.trim()}
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>

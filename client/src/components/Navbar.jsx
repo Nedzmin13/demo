@@ -30,6 +30,8 @@ function Navbar() {
                         <NavLink to="/affari-sconti" className={navLinkClass}>Affari & Sconti</NavLink>
                         <NavLink to="/bonus" className={navLinkClass}>Bonus</NavLink>
                         <NavLink to="/top-destinazioni" className={navLinkClass}>Top Destinazioni</NavLink>
+                        <NavLink to="/pratiche-utili" className={navLinkClass}>Pratiche Utili</NavLink>
+                        <NavLink to="/come-fare" className={navLinkClass}>Come Fare</NavLink>
                         <NavLink to="/notizie-utili" className={navLinkClass}>Notizie Utili</NavLink>
                     </div>
 
@@ -56,6 +58,8 @@ function Navbar() {
                         <NavLink to="/affari-sconti" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Affari & Sconti</NavLink>
                         <NavLink to="/bonus" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Bonus</NavLink>
                         <NavLink to="/top-destinazioni" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Top Destinazioni</NavLink>
+                        <NavLink to="/pratiche-utili" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Pratiche Utili</NavLink>
+                        <NavLink to="/come-fare" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Come Fare</NavLink>
                         <NavLink to="/notizie-utili" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Notizie Utili</NavLink>
                     </div>
                 </div>

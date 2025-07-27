@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'; // <-- LA CORREZIONE È QUI
 import { Helmet } from 'react-helmet-async';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { fetchNewsForAdmin, createNews, updateNews, deleteNews } from '../../api';
 import { Edit, Trash2, X } from 'lucide-react';
+import RichTextEditor from '../../components/admin/forms/RichTextEditor';
 
 function AdminNewsPage() {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState(null);
-    const { register, handleSubmit, reset, setValue, formState: { isSubmitting } } = useForm();
+    const { register, handleSubmit, reset, setValue, control, formState: { isSubmitting } } = useForm();
 
     const loadNews = async () => {
         setLoading(true);
@@ -72,7 +73,16 @@ function AdminNewsPage() {
                             <div><label>Categoria (es. Aperture, Eventi)</label><input {...register('category')} className="w-full border p-2 rounded mt-1"/></div>
                             <div><label>Luogo (es. Roma)</label><input {...register('location')} className="w-full border p-2 rounded mt-1"/></div>
                             <div><label>Estratto (breve descrizione)</label><textarea {...register('excerpt')} rows="3" className="w-full border p-2 rounded mt-1"></textarea></div>
-                            <div><label>Contenuto Completo</label><textarea {...register('content')} rows="6" className="w-full border p-2 rounded mt-1"></textarea></div>
+                            <div>
+                                <label className="font-semibold block mb-2">Contenuto Completo</label>
+                                <Controller
+                                    name="content"
+                                    control={control}
+                                    defaultValue=""
+                                    render={({field}) => <RichTextEditor value={field.value}
+                                                                         onChange={field.onChange}/>}
+                                />
+                            </div>
                             <div><label>Immagine</label><input type="file" {...register('image')} className="w-full text-sm mt-1"/></div>
                             {editing && editing.imageUrl && <img src={editing.imageUrl} alt="preview" className="w-24 h-24 object-cover rounded"/>}
                             <button

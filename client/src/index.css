@@ -3,3 +3,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Stili per l'editor di React Quill nell'area admin */
+.ql-editor {
+    /* Imposta un'altezza minima per l'area di testo */
+    min-height: 300px;
+}
+
+/* Regola chiave per le immagini DENTRO l'editor */
+.ql-editor img {
+    /* Forza le immagini a non superare mai la larghezza dell'editor */
+    max-width: 100%;
+
+    /* Mantiene le proporzioni */
+    height: auto;
+
+    /* Aggiunge un po' di margine per la leggibilità */
+    margin: 1rem 0;
+}
+
+/* Stili specifici per la descrizione dei POI */
+.poi-description p {
+    margin-top: 0;
+    margin-bottom: 0.25rem; /* Aggiunge un piccolo spazio SOTTO ogni paragrafo */
+}
+
+/* Opzionale: se vuoi che il primo paragrafo non abbia spazio sopra */
+.poi-description p:first-child {
+    margin-top: 0;
+}
+
+/* Opzionale: se vuoi che l'ultimo paragrafo non abbia spazio sotto */
+.poi-description p:last-child {
+    margin-bottom: 0;
+}

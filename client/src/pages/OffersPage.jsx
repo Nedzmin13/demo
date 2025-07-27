@@ -2,24 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { fetchOffers } from '../api';
-import { Tag, Search, Home, Cpu, Shirt, ShoppingBasket, Tv, Baby, Heart, Car, Dumbbell  } from 'lucide-react';
+import { Tag, Search, Home, Shirt, ShoppingBasket, Tv, Baby, Heart, Car, Dumbbell } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.1 // Applica un ritardo di 0.1s tra ogni figlio
-        }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
 };
 
 const cardVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1 }
 };
-
 
 const categories = [
     { id: 'Elettronica', label: 'Elettronica', icon: <Tv size={16} /> },
@@ -28,34 +22,46 @@ const categories = [
     { id: 'Alimentari', label: 'Alimentari', icon: <ShoppingBasket size={16} /> },
     { id: 'Bambini', label: 'Bambini', icon: <Baby size={16} /> },
     { id: 'Cosmetici', label: 'Cosmetici', icon: <Heart size={16} /> },
-    { id: 'Auto-Moto', label: 'Auto & Moto', icon: <Car size={16} /> },
-    { id: 'Sport', label: 'Sport e Tempo Libero', icon: <Dumbbell size={16} /> },
+    { id: 'Auto & Moto', label: 'Auto & Moto', icon: <Car size={16} /> },
+    { id: 'Sport e Tempo Libero', label: 'Sport e Tempo Libero', icon: <Dumbbell size={16} /> },
 ];
 
-const OfferCard = ({ offer }) => (
-    <motion.div variants={cardVariants}>
-    <Link to={`/offerte/${offer.id}`} className="block bg-white rounded-lg shadow-md border overflow-hidden flex flex-col group">
-        <div className="overflow-hidden aspect-[4/3] bg-gray-100">
-            <img
-                src={offer.images && offer.images.length > 0 ? offer.images[0].url : 'https://via.placeholder.com/400x300/cccccc/94a3b8?text=Offerta'}
-                alt={offer.title}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-        </div>
-        <div className="p-4 flex-grow flex flex-col">
-            <h3 className="text-lg font-bold text-gray-800 group-hover:text-sky-600">{offer.title}</h3>
-            <p className="text-sm text-gray-500 mb-2">da {offer.store}</p>
-            <p className="text-gray-600 flex-grow text-sm">{offer.description}</p>
-            <div className="mt-4 flex justify-between items-center">
-                <span className="text-2xl font-extrabold text-red-600">{offer.discount}</span>
-                <div className="bg-sky-600 text-white px-4 py-2 rounded-lg font-semibold">
-                    Vedi Dettagli
+const OfferCard = ({ offer }) => {
+    // Non ci serve più la funzione truncate in JavaScript!
+
+    const getImageUrl = (offer) => {
+        if (offer.images && offer.images.length > 0 && offer.images[0].url) {
+            return offer.images[0].url;
+        }
+        return `https://ui-avatars.com/api/?name=${offer.title.replace(/\s/g, '+')}&size=400&background=e0f2fe&color=0891b2`;
+    };
+
+    return (
+        <motion.div variants={cardVariants}>
+            <Link to={`/offerte/${offer.id}`} className="block bg-white rounded-lg shadow-md border overflow-hidden flex flex-col group h-full">
+                <div className="overflow-hidden aspect-[4/3] bg-gray-100">
+                    <img src={getImageUrl(offer)} alt={offer.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"/>
                 </div>
-            </div>
-        </div>
-    </Link>
-    </motion.div>
-);
+                <div className="p-4 flex-grow flex flex-col">
+                    <h3 className="text-lg font-bold text-gray-800 group-hover:text-sky-600 transition-colors">{offer.title}</h3>
+                    <p className="text-sm text-gray-500 mb-2">da {offer.store}</p>
+
+                    {/* --- ECCO LA SOLUZIONE DEFINITIVA --- */}
+                    <div
+                        // line-clamp-3 limita il testo a 3 righe, poi mette "..."
+                        className="text-gray-600 flex-grow text-sm min-h-[60px] line-clamp-3"
+                        dangerouslySetInnerHTML={{ __html: offer.description }}
+                    />
+
+                    <div className="mt-4 flex justify-between items-center pt-4 border-t">
+                        <span className="text-2xl font-extrabold text-red-600">{offer.discount}</span>
+                        <div className="bg-sky-600 text-white px-4 py-2 rounded-lg font-semibold text-sm">Vedi Dettagli</div>
+                    </div>
+                </div>
+            </Link>
+        </motion.div>
+    );
+};
 
 function OffersPage() {
     const [offers, setOffers] = useState([]);
@@ -69,25 +75,16 @@ function OffersPage() {
                 const params = {};
                 if (filters.category) params.category = filters.category;
                 if (filters.search) params.search = filters.search;
-
                 const response = await fetchOffers(params);
                 setOffers(response.data);
-            } catch (error) {
-                console.error("Errore nel caricare le offerte:", error);
-            } finally {
-                setLoading(false);
-            }
+            } catch (error) { console.error("Errore nel caricare le offerte:", error); }
+            finally { setLoading(false); }
         };
         loadOffers();
     }, [filters]);
 
-    const handleCategoryChange = (categoryId) => {
-        setFilters(prev => ({ ...prev, search: '', category: prev.category === categoryId ? null : categoryId }));
-    };
-
-    const handleSearchChange = (e) => {
-        setFilters(prev => ({...prev, category: null, search: e.target.value}));
-    }
+    const handleCategoryChange = (categoryId) => { setFilters(prev => ({ ...prev, search: '', category: prev.category === categoryId ? null : categoryId })); };
+    const handleSearchChange = (e) => { setFilters(prev => ({ ...prev, category: null, search: e.target.value })); };
 
     return (
         <>
@@ -98,7 +95,6 @@ function OffersPage() {
                         <h1 className="text-4xl font-bold text-gray-900">Affari & Sconti</h1>
                         <p className="mt-3 text-lg text-gray-600">Le migliori offerte dai principali store italiani, aggiornate in tempo reale</p>
                     </div>
-
                     <div className="bg-white p-6 rounded-lg shadow-sm mb-10">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                             <div>
@@ -120,24 +116,14 @@ function OffersPage() {
                             </div>
                         </div>
                     </div>
-
                     <div>
                         <h2 className="text-2xl font-bold mb-6">Tutte le Offerte ({loading ? '...' : offers.length} disponibili)</h2>
-                        {loading ? (
-                            <p>Caricamento offerte...</p>
-                        ) : offers.length > 0 ? (
-                            <motion.div
-                                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-                                variants={containerVariants}
-                                initial="hidden"
-                                animate="visible"
-                            >
+                        {loading ? <p>Caricamento...</p> : offers.length > 0 ? (
+                            <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" variants={containerVariants} initial="hidden" animate="visible">
                                 {offers.map(offer => <OfferCard key={offer.id} offer={offer}/>)}
                             </motion.div>
                         ) : (
-                            <div className="text-center py-16 bg-white rounded-lg shadow-sm">
-                                <p className="text-gray-500">Nessuna offerta trovata con i filtri selezionati.</p>
-                            </div>
+                            <div className="text-center py-16 bg-white rounded-lg shadow-sm"><p>Nessuna offerta trovata.</p></div>
                         )}
                     </div>
                 </div>

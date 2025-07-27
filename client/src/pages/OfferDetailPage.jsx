@@ -16,10 +16,10 @@ function OfferDetailPage() {
                 setOffer(res.data);
             } catch (error) { console.error(error); }
         };
-        loadOffer();
+        if (id) loadOffer();
     }, [id]);
 
-    if (!offer) return <div>Caricamento offerta...</div>;
+    if (!offer) return <div className="text-center p-10">Caricamento offerta...</div>;
 
     return (
         <>
@@ -39,7 +39,13 @@ function OfferDetailPage() {
                             <Store size={16}/> Disponibile da <strong>{offer.store}</strong>
                         </p>
                         <hr className="my-6"/>
-                        <p className="text-gray-700 leading-relaxed whitespace-pre-line">{offer.description}</p>
+
+                        {/* --- ECCO LA CORREZIONE --- */}
+                        <div
+                            className="prose max-w-none text-gray-700 leading-relaxed prose-p:my-2"
+                            dangerouslySetInnerHTML={{ __html: offer.description }}
+                        />
+
                         <a href={offer.link} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-2 bg-sky-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-sky-700 transition-colors">
                             Vai all'Offerta <ExternalLink size={18}/>
                         </a>

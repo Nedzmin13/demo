@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -47,10 +48,11 @@ model comune {
 }
 
 model comuneImage {
-  id       Int    @id @default(autoincrement())
-  url      String @db.Text
-  comuneId Int
-  comune   comune @relation(fields: [comuneId], references: [id], onDelete: Cascade)
+  id          Int     @id @default(autoincrement())
+  url         String  @db.Text
+  comuneId    Int
+  comune      comune  @relation(fields: [comuneId], references: [id], onDelete: Cascade)
+  attribution String? @db.Text
 
   @@index([comuneId])
 }
@@ -306,4 +308,86 @@ model accommodation {
   id              Int             @id @default(autoincrement())
   poiId           Int             @unique
   pointofinterest pointofinterest @relation(fields: [poiId], references: [id], onDelete: Cascade)
+}
+
+// Modello per le Categorie Principali
+model Category {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique // Es. "Fisco e Tasse"
+  slug        String  @unique // Es. "fisco-e-tasse"
+  description String? @db.Text
+  iconName    String? // Es. "FileText" (nome dell'icona da Lucide)
+
+  // Relazione: una categoria ha molte guide
+  guides Guide[]
+}
+
+// Modello per le Guide/Sottocategorie specifiche
+model Guide {
+  id        Int      @id @default(autoincrement())
+  title     String // Es. "Guida al Modello 730"
+  slug      String   @unique
+  content   String   @db.Text
+  excerpt   String?  @db.Text
+  imageUrl  String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relazione con la categoria di appartenenza
+  categoryId Int
+  category   Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  images     GuideImage[]
+
+  @@index([categoryId])
+}
+
+model GuideImage {
+  id          Int     @id @default(autoincrement())
+  url         String  @db.Text
+  guideId     Int
+  guide       Guide   @relation(fields: [guideId], references: [id], onDelete: Cascade)
+  attribution String? @db.Text
+
+  @@index([guideId])
+}
+
+// Modello per le Categorie del "Come Fare" (es. Tecnologia, Cucina)
+model HowToCategory {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique // Es. "Tecnologia & Informatica"
+  slug        String  @unique // Es. "tecnologia-e-informatica"
+  description String? @db.Text
+  iconName    String? // Es. "HardDrive"
+
+  articles HowToArticle[]
+}
+
+// Modello per gli Articoli/Tutorial del "Come Fare"
+model HowToArticle {
+  id        Int      @id @default(autoincrement())
+  title     String // Es. "Come velocizzare un PC lento"
+  slug      String   @unique
+  // Il contenuto accetterà HTML dall'editor di testo ricco
+  content   String   @db.Text
+  excerpt   String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  categoryId Int
+  category   HowToCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  images HowToImage[] // Per la galleria di immagini in cima
+
+  @@index([categoryId])
+}
+
+// Modello per le immagini della galleria
+model HowToImage {
+  id          Int          @id @default(autoincrement())
+  url         String       @db.Text
+  articleId   Int
+  article     HowToArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  attribution String?      @db.Text
+
+  @@index([articleId])
 }

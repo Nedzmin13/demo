@@ -30,7 +30,10 @@ const DestinationCard = ({ dest }) => (
                     <Star size={14} className="fill-white"/> {dest.rating.toFixed(1)}
                 </div>
             </div>
-            <p className="text-gray-600 mt-2 text-sm">{dest.description}</p>
+            <div
+                className="text-gray-600 mt-2 text-sm line-clamp-3"
+                dangerouslySetInnerHTML={{__html: dest.description}}
+            />
         </div>
     </Link>
 );

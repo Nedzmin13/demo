@@ -6,7 +6,7 @@ import {
     getAllComuniForAdmin,
     getComuneByIdForAdmin,
     updateComune,          // L'unica funzione di aggiornamento che ci serve
-    deleteComuneImage
+    deleteComuneImage, updateComuneImage
 } from '../controllers/comuniController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
@@ -22,6 +22,7 @@ router.route('/admin/:id')
     .put(protect, upload.array('images'), updateComune);
 
 router.route('/admin/images/:imageId')
+    .put(protect, updateComuneImage)
     .delete(protect, deleteComuneImage);
 
 // --- Rotte Pubbliche ---
