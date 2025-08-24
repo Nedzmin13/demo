@@ -56,6 +56,13 @@ import HowToPage from "./pages/HowToPage.jsx";
 import HowToCategoryPage from "./pages/HowToCategoryPage.jsx";
 import HowToArticlePage from "./pages/HowToArticlePage.jsx";
 import NewsDetailPage from "./pages/NewsDetailPage.jsx";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.jsx";
+import CookiePolicyPage from "./pages/CookiePolicyPage.jsx";
+import TermsAndConditionsPage from "./pages/TermsAndConditionsPage.jsx";
+import ChiSiamoPage from "./pages/ChiSiamoPage.jsx";
+import FaqPage from "./pages/FaqPage.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
+import ItinerariesByRegionPage from "./pages/ItinerariesByRegionPage.jsx";
 
 
 const Placeholder = ({ title }) => <div className="text-center p-20 text-3xl font-bold">{title}</div>;
@@ -80,6 +87,7 @@ function App() {
                 <Route path="/cosa-vedere/:regionName" element={<RegionDetailPage />} />
                 <Route path="/cosa-vedere/:regionName/:provinceName/:provinceId" element={<AttractionProvinceListPage />} />
                 <Route path="/itinerari" element={<ItinerariesListPage />} />
+                <Route path="/itinerari/regione/:regionSlug" element={<ItinerariesByRegionPage />} />
                 <Route path="/itinerari/:id" element={<ItineraryDetailPage />} />
                 <Route path="affari-sconti" element={<OffersPage />} />
                 <Route path="/offerte/:id" element={<OfferDetailPage />} />
@@ -96,13 +104,14 @@ function App() {
                 <Route path="/come-fare/category/:categorySlug" element={<HowToCategoryPage />} />
                 <Route path="/come-fare/:slug" element={<HowToArticlePage />} />
 
-                <Route path="chi-siamo" element={<Placeholder title="Chi Siamo" />} />
                 <Route path="contatti" element={<Placeholder title="Contatti" />} />
-                <Route path="faq" element={<Placeholder title="FAQ" />} />
-                <Route path="privacy-policy" element={<Placeholder title="Privacy Policy" />} />
-                <Route path="cookie-policy" element={<Placeholder title="Cookie Policy" />} />
-                <Route path="termini-e-condizioni" element={<Placeholder title="Termini e Condizioni" />} />
-                <Route path="*" element={<Placeholder title="404 - Pagina Non Trovata" />} />
+                <Route path="chi-siamo" element={<ChiSiamoPage />} />
+                <Route path="faq" element={<FaqPage />} />
+                <Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="cookie-policy" element={<CookiePolicyPage />} />
+                <Route path="termini-e-condizioni" element={<TermsAndConditionsPage />} />
+
+                <Route path="*" element={<NotFoundPage />} />
             </Route>
 
             {/* --- ROTTE LOGIN E ADMIN --- */}

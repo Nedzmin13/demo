@@ -6,13 +6,18 @@ const getAllRegions = async (req, res) => {
     try {
         const regions = await prisma.region.findMany({
             orderBy: { name: 'asc' },
+            include: {
+                // Includiamo solo l'ID delle province, ci serve per il conteggio
+                province: {
+                    select: { id: true }
+                }
+            }
         });
         res.status(200).json(regions);
     } catch (error) {
         res.status(500).json({ message: 'Errore del server.' });
     }
 };
-
 const getRegionByName = async (req, res) => {
     try {
         const regionNameFromUrl = req.params.name;

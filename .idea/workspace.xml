@@ -6,49 +6,30 @@
   <component name="ChangeListManager">
     <list default="true" id="32ec3e24-f520-4fe3-9902-f90ab54cf9ee" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/public/vite.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/api/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Footer.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Navbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/NewsPreviewCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/NewsPreviewCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/admin/AddPoiModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/admin/AddPoiModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/admin/EditPoiModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/admin/EditPoiModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/layouts/AdminLayout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/layouts/AdminLayout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/BonusPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/BonusPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ComuneDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ComuneDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/DestinationDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/DestinationDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/HomePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/HomePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/ItinerariesListPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ItinerariesListPage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/ItineraryDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ItineraryDetailPage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/OfferDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/OfferDetailPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/OffersPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/OffersPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/TopDestinationsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/TopDestinationsPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/UtilityNewsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/UtilityNewsPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminBonusPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminBonusPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminComuneDetailPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminComuneDetailPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/RegionsListPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/RegionsListPage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminDestinationsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminDestinationsPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminItineraryEditPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminItineraryEditPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminNewsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminNewsPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminOffersPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminOffersPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/admin/AdminItinerariesListPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/admin/AdminItinerariesListPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/attractions/AttractionProvinceListPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/attractions/AttractionProvinceListPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/services/ServiceProvinceListPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/services/ServiceProvinceListPage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/server/prisma/schema.prisma" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/bonusesController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/bonusesController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/comuniController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/comuniController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/controllers/destinationsController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/destinationsController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/controllers/itinerariesController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/itinerariesController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/newsController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/newsController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/offersController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/offersController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/poiController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/poiController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/regionsController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/regionsController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/controllers/searchController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/searchController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/controllers/utilityController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/utilityController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/comuneRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/comuneRoutes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/routes/itineraryRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/itineraryRoutes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/newsRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/newsRoutes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/routes/poiRoutes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routes/poiRoutes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,31 +47,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/User/Documents/projekat-fastinfo/fastinfo/client/src/assets",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "npm",
-    "npm.dev (mob).executor": "Run",
-    "settings.editor.selected.configurable": "terminal",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Documents/projekat-fastinfo/fastinfo/client/src/assets&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.dev (mob).executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\client\src\assets" />
+      <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\client\public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\server" />
       <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\client\src\pages\admin" />
       <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\client\src\components" />
       <recent name="C:\Users\User\Documents\projekat-fastinfo\fastinfo\client" />
@@ -131,7 +114,9 @@
       <workItem from="1753001064083" duration="307000" />
       <workItem from="1753001493715" duration="2955000" />
       <workItem from="1753011674329" duration="256000" />
-      <workItem from="1753011962070" duration="169564000" />
+      <workItem from="1753011962070" duration="227363000" />
+      <workItem from="1754253199683" duration="1215000" />
+      <workItem from="1755463703733" duration="21828000" />
     </task>
     <task id="LOCAL-00001" summary="///">
       <option name="closed" value="true" />
@@ -173,7 +158,23 @@
       <option name="project" value="LOCAL" />
       <updated>1753391660378</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="///">
+      <option name="closed" value="true" />
+      <created>1753578093909</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1753578093909</updated>
+    </task>
+    <task id="LOCAL-00007" summary="///">
+      <option name="closed" value="true" />
+      <created>1753617823339</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1753617823339</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

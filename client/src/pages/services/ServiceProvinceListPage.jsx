@@ -1,20 +1,36 @@
-// client/src/pages/services/ServiceProvinceListPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { fetchFeaturedPoisByProvince } from '../../api';
 import { ChevronRight, HeartHandshake, MapPin } from 'lucide-react';
 
-const FeaturedPoiCard = ({ poi }) => (
-    <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <h3 className="text-xl font-bold text-gray-800">{poi.name}</h3>
-        <p className="text-gray-500 flex items-center gap-2 mt-1">
-            <MapPin size={14} />
-            {poi.comune.name}
-        </p>
-        <p className="mt-2 text-sm text-gray-600">{poi.description || 'Nessuna descrizione disponibile.'}</p>
-    </div>
-);
+// --- COMPONENTE CARD CORRETTO ---
+const FeaturedPoiCard = ({ poi }) => {
+    // Funzione per tagliare il testo HTML in modo sicuro
+    const truncateHTML = (html, length = 100) => {
+        if (!html) return 'Nessuna descrizione disponibile.';
+        const textOnly = html.replace(/<[^>]+>/g, '');
+        if (textOnly.length <= length) return html;
+        return textOnly.substring(0, length) + '...';
+    };
+
+    return (
+        // 1. Avvolgiamo la card in un componente Link
+        <Link to={`/poi/${poi.id}`} className="block bg-white p-6 rounded-lg shadow-sm border hover:shadow-lg hover:-translate-y-1 transition-all duration-200 h-full">
+            <h3 className="text-xl font-bold text-gray-800">{poi.name}</h3>
+            <p className="text-gray-500 flex items-center gap-2 mt-1 text-sm">
+                <MapPin size={14} />
+                {poi.comune.name}
+            </p>
+            {/* 2. Usiamo dangerouslySetInnerHTML per renderizzare l'HTML */}
+            <div
+                className="mt-2 text-sm text-gray-600 prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: truncateHTML(poi.description) }}
+            />
+        </Link>
+    );
+};
+
 
 function ServiceProvinceListPage() {
     const { regionName, provinceId, provinceName } = useParams();
@@ -46,7 +62,6 @@ function ServiceProvinceListPage() {
                     <nav className="flex items-center text-sm text-gray-500 mb-8">
                         <Link to="/servizi-essenziali" className="hover:underline">Servizi Essenziali</Link>
                         <ChevronRight size={16} className="mx-2" />
-                        {/* ... altri breadcrumbs se necessario */}
                         <span className="font-semibold text-gray-700">{capitalize(provinceName)}</span>
                     </nav>
                     <div className="text-center mb-12">
@@ -58,11 +73,12 @@ function ServiceProvinceListPage() {
                             {pois.map(poi => <FeaturedPoiCard key={poi.id} poi={poi} />)}
                         </div>
                     ) : (
-                        <p className="text-center bg-white p-10 rounded-lg shadow-sm">Nessun servizio in vetrina per questa provincia.</p>
+                        <p className="text-center bg-white p-10 rounded-lg shadow-sm">Nessun servizio essenziale in vetrina per questa provincia.</p>
                     )}
                 </div>
             </div>
         </>
     );
 }
+
 export default ServiceProvinceListPage;

@@ -24,6 +24,8 @@ import categoryRoutes from "./src/routes/categoryRoutes.js";
 import howToCategoryRoutes from "./src/routes/howToCategoryRoutes.js";
 import howToArticleRoutes from "./src/routes/howToArticleRoutes.js";
 import imageRoutes from "./src/routes/imageRoutes.js";
+import sitemapRoutes from "./src/routes/sitemapRoutes.js";
+import geoSearchRoutes from "./src/routes/geoSearchRoutes.js";
 
 dotenv.config();
 
@@ -51,6 +53,7 @@ app.use('/api/news', newsRoutes);
 app.use('/api/strikes', strikeRoutes);
 app.use('/api/traffic', trafficRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/geo-search', geoSearchRoutes);
 app.use('/api/guides', guideRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/howto-categories', howToCategoryRoutes);
@@ -71,6 +74,8 @@ app.get('/api/test-db', async (req, res) => {
         res.status(500).json({ message: 'Errore durante la connessione al database.' });
     }
 });
+
+app.use('/', sitemapRoutes);
 
 app.get('/', (req, res) => {
     res.json({ message: 'Benvenuto nell\'API di FastInfo!' });

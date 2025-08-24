@@ -2,40 +2,57 @@ import prisma from '../config/prismaClient.js';
 import cloudinary from '../config/cloudinary.js';
 
 const toNull = (value) => (value === '' || value === undefined ? null : value);
-
 const uploadImageToCloudinary = async (file) => {
     const b64 = Buffer.from(file.buffer).toString("base64");
     let dataURI = `data:${file.mimetype};base64,${b64}`;
     return cloudinary.uploader.upload(dataURI, { folder: "fastinfo_itineraries" });
 };
 
-// --- DEFINIZIONE DI TUTTE LE FUNZIONI (SENZA 'export' QUI) ---
-
-const getAllItineraries = async (req, res) => {
+// --- FUNZIONI PUBBLICHE ---
+export const getAllItineraries = async (req, res) => {
+    const { region } = req.query;
     try {
-        const itineraries = await prisma.itinerary.findMany({
+        let itineraries = await prisma.itinerary.findMany({
             include: { images: true },
             orderBy: { title: 'asc' }
         });
+        if (region) {
+            const formattedRegion = region.replace(/-/g, ' ').toLowerCase();
+            itineraries = itineraries.filter(it => it.region?.toLowerCase() === formattedRegion);
+        }
         res.status(200).json(itineraries);
     } catch (error) { res.status(500).json({ message: 'Errore del server.' }); }
 };
 
-const getItineraryById = async (req, res) => {
+export const getItineraryById = async (req, res) => {
     try {
         const itinerary = await prisma.itinerary.findUnique({
             where: { id: parseInt(req.params.id) },
-            include: {
-                images: true,
-                steps: { orderBy: { day: 'asc' } }
-            }
+            include: { images: true, steps: { orderBy: { day: 'asc' } } }
         });
         if (!itinerary) return res.status(404).json({ message: 'Itinerario non trovato.' });
         res.status(200).json(itinerary);
     } catch (error) { res.status(500).json({ message: 'Errore del server.' }); }
 };
 
-const createItinerary = async (req, res) => {
+// --- FUNZIONI ADMIN ---
+export const getAllItinerariesForAdmin = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 15;
+        const skip = (page - 1) * limit;
+        const [itineraries, total] = await prisma.$transaction([
+            prisma.itinerary.findMany({ orderBy: { title: 'asc' }, skip, take: limit }),
+            prisma.itinerary.count()
+        ]);
+        res.status(200).json({
+            data: itineraries,
+            pagination: { total, page: page, totalPages: Math.ceil(total / limit) }
+        });
+    } catch (error) { res.status(500).json({ message: 'Errore server.' }); }
+};
+
+export const createItinerary = async (req, res) => {
     const { title, description, region, duration, isPopular, steps } = req.body;
     try {
         const newItinerary = await prisma.$transaction(async (tx) => {
@@ -66,7 +83,7 @@ const createItinerary = async (req, res) => {
     }
 };
 
-const updateItinerary = async (req, res) => {
+export const updateItinerary = async (req, res) => {
     const id = parseInt(req.params.id);
     const { title, description, region, duration, isPopular, steps } = req.body;
     try {
@@ -99,14 +116,14 @@ const updateItinerary = async (req, res) => {
     }
 };
 
-const deleteItinerary = async (req, res) => {
+export const deleteItinerary = async (req, res) => {
     try {
         await prisma.itinerary.delete({ where: { id: parseInt(req.params.id) } });
         res.status(200).json({ message: 'Itinerario eliminato' });
     } catch (error) { res.status(500).json({ message: 'Errore eliminazione' }); }
 };
 
-const addItineraryImages = async (req, res) => {
+export const addItineraryImages = async (req, res) => {
     const itineraryId = parseInt(req.params.id);
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ message: 'Nessun file fornito.' });
@@ -123,7 +140,7 @@ const addItineraryImages = async (req, res) => {
 };
 
 
-const deleteItineraryImage = async (req, res) => {
+export const deleteItineraryImage = async (req, res) => {
     const imageId = parseInt(req.params.imageId);
     try {
         await prisma.itineraryImage.delete({ where: { id: imageId } });
@@ -131,13 +148,3 @@ const deleteItineraryImage = async (req, res) => {
     } catch (error) { res.status(500).json({ message: "Errore del server" }); }
 };
 
-// --- UNICO BLOCCO DI EXPORT ALLA FINE DEL FILE ---
-export {
-    getAllItineraries,
-    getItineraryById,
-    createItinerary,
-    updateItinerary,
-    deleteItinerary,
-    addItineraryImages,
-    deleteItineraryImage
-};

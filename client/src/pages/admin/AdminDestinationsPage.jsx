@@ -9,7 +9,7 @@ import {
     addImagesToDestination,
     deleteDestinationImage
 } from '../../api';
-import { Edit, Trash2, X, Star } from 'lucide-react';
+import { Edit, Trash2, X, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import RichTextEditor from '../../components/admin/forms/RichTextEditor';
 
 const seasons = ["Primavera", "Estate", "Autunno", "Inverno"];
@@ -21,11 +21,15 @@ function AdminDestinationsPage() {
     const { register, handleSubmit, reset, setValue, control, formState: { isSubmitting } } = useForm();
     const [currentImages, setCurrentImages] = useState([]);
 
+    const [pagination, setPagination] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+
     const loadData = async () => {
         setLoading(true);
         try {
-            const response = await fetchDestinationsForAdmin();
-            setDestinations(response.data);
+            const response = await fetchDestinationsForAdmin({ page: currentPage, limit: 15 });
+            setDestinations(response.data.data);
+            setPagination(response.data.pagination);
         } catch (error) {
             console.error("Errore nel caricare le destinazioni:", error);
             alert("Impossibile caricare i dati.");
@@ -36,7 +40,7 @@ function AdminDestinationsPage() {
 
     useEffect(() => {
         loadData();
-    }, []);
+    }, [currentPage]);
 
     useEffect(() => {
         if (editing) {
@@ -101,6 +105,18 @@ function AdminDestinationsPage() {
                 console.error("Errore eliminazione immagine:", error);
                 alert("Impossibile eliminare l'immagine.");
             }
+        }
+    };
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (pagination && currentPage < pagination.totalPages) {
+            setCurrentPage(currentPage + 1);
         }
     };
 
@@ -187,6 +203,20 @@ https://esempio.com/immagine2.png" className="w-full border p-2 rounded mt-1 tex
                             ))}
                             {!loading && destinations.length === 0 && <p className="text-center text-gray-500 py-8">Nessuna destinazione presente.</p>}
                         </div>
+
+                        {pagination && pagination.totalPages > 1 && (
+                            <div className="flex justify-between items-center mt-6">
+                                <button onClick={handlePrevPage} disabled={currentPage === 1 || loading} className="flex items-center ...">
+                                    <ChevronLeft size={16} /> Precedente
+                                </button>
+                                <span className="text-sm text-gray-700">
+                                    Pagina <strong>{currentPage}</strong> di <strong>{pagination.totalPages}</strong>
+                                </span>
+                                <button onClick={handleNextPage} disabled={currentPage === pagination.totalPages || loading} className="flex items-center ...">
+                                    Successiva <ChevronRight size={16} />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

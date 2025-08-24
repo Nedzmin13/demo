@@ -18,7 +18,7 @@ export const fetchComuneBySlug = (slug) => API.get(`/comuni/${slug}`);
 export const fetchOffers = (params) => API.get('/offers', { params });
 export const fetchOfferById = (id) => API.get(`/offers/${id}`);
 export const fetchFeaturedPoisByProvince = (provinceId, type) => API.get(`/pois/featured-by-province/${provinceId}`, { params: { type } });
-export const fetchItineraries = () => API.get('/itineraries');
+export const fetchItineraries = (params) => API.get('/itineraries', { params });
 export const fetchItineraryById = (id) => API.get(`/itineraries/${id}`);
 export const fetchDestinationsBySeason = (season) => API.get('/destinations', { params: { season } });
 export const fetchDestinationById = (id) => API.get(`/destinations/${id}`);
@@ -29,6 +29,7 @@ export const loginAdmin = (credentials) => API.post('/auth/login', credentials);
 export const fetchNews = (params) => API.get('/news', { params });
 export const fetchNewsById = (id) => API.get(`/news/${id}`);
 export const globalSearch = (query) => API.get('/search', { params: { q: query } });
+export const geoSearch = (query) => API.get('/geo-search', { params: { q: query } });
 export const fetchPoiById = (id) => API.get(`/pois/${id}`);
 // Guide (Pubblico)
 export const fetchAllGuides = () => API.get('/guides');
@@ -71,7 +72,7 @@ export const updateBonus = (id, data) => PrivateAPI.put(`/bonuses/admin/${id}`, 
 export const deleteBonus = (id) => PrivateAPI.delete(`/bonuses/admin/${id}`);
 
 // Destinazioni
-export const fetchDestinationsForAdmin = () => PrivateAPI.get('/destinations/admin');
+export const fetchDestinationsForAdmin = (params) => PrivateAPI.get('/destinations/admin', { params });
 export const createDestination = (formData) => PrivateAPI.post('/destinations/admin', formData);
 export const updateDestination = (id, data) => PrivateAPI.put(`/destinations/admin/${id}`, data);
 export const deleteDestination = (id) => PrivateAPI.delete(`/destinations/admin/${id}`);
@@ -79,11 +80,10 @@ export const addImagesToDestination = (id, formData) => PrivateAPI.post(`/destin
 export const deleteDestinationImage = (id) => PrivateAPI.delete(`/destinations/admin/images/${id}`);
 
 // Itinerari
-export const fetchItinerariesForAdmin = () => PrivateAPI.get('/itineraries/admin/all');
-export const createItinerary = (data) => PrivateAPI.post('/itineraries/admin', data);
-export const updateItinerary = (id, data) => PrivateAPI.put(`/itineraries/admin/${id}`, data);
+export const fetchItinerariesForAdmin = (params) => PrivateAPI.get('/itineraries/admin/list', { params });
+export const createItinerary = (formData) => PrivateAPI.post('/itineraries/admin', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const updateItinerary = (id, formData) => PrivateAPI.put(`/itineraries/admin/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 export const deleteItinerary = (id) => PrivateAPI.delete(`/itineraries/admin/${id}`);
-export const addItineraryImages = (id, formData) => PrivateAPI.post(`/itineraries/admin/${id}/images`, formData);
 export const deleteItineraryImage = (imageId) => PrivateAPI.delete(`/itineraries/admin/images/${imageId}`);
 
 // Notizie

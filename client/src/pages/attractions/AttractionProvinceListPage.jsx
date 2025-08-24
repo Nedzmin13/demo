@@ -1,20 +1,37 @@
-// client/src/pages/attractions/AttractionProvinceListPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { fetchFeaturedPoisByProvince } from '../../api';
 import { ChevronRight, Eye, MapPin } from 'lucide-react';
 
-const FeaturedPoiCard = ({ poi }) => (
-    <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <h3 className="text-xl font-bold text-gray-800">{poi.name}</h3>
-        <p className="text-gray-500 flex items-center gap-2 mt-1">
-            <MapPin size={14} />
-            {poi.comune.name}
-        </p>
-        <p className="mt-2 text-sm text-gray-600">{poi.description || 'Nessuna descrizione disponibile.'}</p>
-    </div>
-);
+// --- COMPONENTE CARD CORRETTO ---
+const FeaturedPoiCard = ({ poi }) => {
+    // Funzione per troncare il testo se è troppo lungo
+    const truncateHTML = (html, length = 100) => {
+        if (!html) return 'Nessuna descrizione disponibile.';
+        // Rimuove i tag HTML per contare solo il testo
+        const textOnly = html.replace(/<[^>]+>/g, '');
+        if (textOnly.length <= length) return html;
+        return textOnly.substring(0, length) + '...';
+    };
+
+    return (
+        // 1. Avvolgiamo tutto in un Link
+        <Link to={`/poi/${poi.id}`} className="block bg-white p-6 rounded-lg shadow-sm border hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
+            <h3 className="text-xl font-bold text-gray-800">{poi.name}</h3>
+            <p className="text-gray-500 flex items-center gap-2 mt-1 text-sm">
+                <MapPin size={14} />
+                {poi.comune.name}
+            </p>
+            {/* 2. Usiamo dangerouslySetInnerHTML per renderizzare l'HTML */}
+            <div
+                className="mt-2 text-sm text-gray-600 prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: truncateHTML(poi.description) }}
+            />
+        </Link>
+    );
+};
+
 
 function AttractionProvinceListPage() {
     const { regionName, provinceId, provinceName } = useParams();
@@ -25,7 +42,6 @@ function AttractionProvinceListPage() {
         const loadPois = async () => {
             setLoading(true);
             try {
-                // La differenza è qui: chiamiamo con type='attraction'
                 const response = await fetchFeaturedPoisByProvince(provinceId, 'attraction');
                 setPois(response.data);
             } catch (error) {
@@ -65,4 +81,5 @@ function AttractionProvinceListPage() {
         </>
     );
 }
+
 export default AttractionProvinceListPage;

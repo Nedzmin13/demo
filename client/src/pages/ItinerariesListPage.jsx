@@ -1,62 +1,52 @@
-// client/src/pages/ItinerariesListPage.jsx
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { fetchItineraries } from '../api';
-import { Map, Clock } from 'lucide-react';
+import { fetchRegions } from '../api';
+import { MapPin } from 'lucide-react';
 
-const ItineraryCard = ({ itinerary }) => (
-    <Link to={`/itinerari/${itinerary.id}`} className="block bg-white rounded-lg shadow-md overflow-hidden group">
-        <div className="relative">
-            <img
-                src={itinerary.images[0]?.url || 'https://via.placeholder.com/400x250/e2e8f0/94a3b8?text=Itinerario'}
-                alt={itinerary.title}
-                className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-        </div>
-        <div className="p-4">
-            <h3 className="text-xl font-bold text-gray-800 group-hover:text-sky-600 transition-colors">{itinerary.title}</h3>
-            <div className="flex items-center text-sm text-gray-500 mt-2 gap-4">
-                <span className="flex items-center gap-1"><Map size={14} /> {itinerary.region}</span>
-                <span className="flex items-center gap-1"><Clock size={14} /> {itinerary.duration}</span>
-            </div>
-        </div>
+const RegionCard = ({ region }) => (
+    <Link
+        to={`/itinerari/regione/${region.name.toLowerCase().replace(/\s+/g, '-')}`}
+        className="block p-8 bg-white rounded-xl shadow-md border border-transparent hover:border-sky-500 hover:shadow-lg transition-all text-center group"
+    >
+        <MapPin className="mx-auto text-sky-500 mb-3 transition-transform group-hover:scale-110" size={32} />
+        <h3 className="font-bold text-xl text-gray-800 group-hover:text-sky-600">{region.name}</h3>
     </Link>
 );
 
 function ItinerariesListPage() {
-    const [itineraries, setItineraries] = useState([]);
+    const [regions, setRegions] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadData = async () => {
+        const loadRegions = async () => {
+            setLoading(true);
             try {
-                const response = await fetchItineraries();
-                setItineraries(response.data);
-            } catch (error) {
-                console.error("Errore caricamento itinerari:", error);
-            } finally {
-                setLoading(false);
-            }
+                const response = await fetchRegions();
+                setRegions(response.data);
+            } catch (error) { console.error("Errore caricamento regioni:", error); }
+            finally { setLoading(false); }
         };
-        loadData();
+        loadRegions();
     }, []);
 
     return (
         <>
-            <Helmet><title>Itinerari in Italia - InfoSubito</title></Helmet>
-            <div className="bg-gray-50 py-12">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <Helmet><title>Itinerari in Italia per Regione - InfoSubito</title></Helmet>
+            <div className="bg-gray-50 py-16">
+                <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h1 className="text-4xl font-bold text-gray-900">Itinerari</h1>
-                        <p className="mt-3 text-lg text-gray-600">Scopri i percorsi e i viaggi più belli da fare in Italia.</p>
+                        <h1 className="text-4xl font-extrabold text-gray-800">Scopri gli Itinerari per Regione</h1>
+                        <p className="mt-3 text-lg text-gray-600">Seleziona una regione per visualizzare i percorsi e i viaggi consigliati.</p>
                     </div>
-                    {loading ? <p>Caricamento...</p> : itineraries.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {itineraries.map(it => <ItineraryCard key={it.id} itinerary={it} />)}
-                        </div>
+                    {loading ? (
+                        <p className="text-center text-gray-500">Caricamento regioni...</p>
                     ) : (
-                        <p className="text-center bg-white p-10 rounded-lg shadow-sm">Nessun itinerario disponibile al momento.</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {regions.map(region => (
+                                <RegionCard key={region.id} region={region} />
+                            ))}
+                        </div>
                     )}
                 </div>
             </div>

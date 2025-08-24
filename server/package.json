@@ -10,7 +10,9 @@
     "prisma": "prisma",
     "populate-content": "node src/scripts/populateGuidesContent.js",
     "populate-images": "node src/scripts/populateComuniImages.js",
-    "populate-bonuses": "node src/scripts/populateBonuses.js"
+    "populate-bonuses": "node src/scripts/populateBonuses.js",
+    "populate-destinations": "node src/scripts/populateDestinations.js",
+    "populate-itineraries": "node src/scripts/populateItineraries.js"
   },
   "keywords": [],
   "author": "",
@@ -26,7 +28,9 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.14.2",
-    "openai": "^5.10.2"
+    "openai": "^5.10.2",
+    "sitemap": "^8.0.0",
+    "unsplash-js": "^7.0.19"
   },
   "devDependencies": {
     "nodemon": "^3.1.2",

@@ -33,12 +33,35 @@ const getDestinationById = async (req, res) => {
 // --- Funzioni Admin ---
 const getAllDestinationsForAdmin = async (req, res) => {
     try {
-        const destinations = await prisma.destination.findMany({
-            orderBy: { name: 'asc' },
-            include: { images: true }
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 15; // Mostra 15 per pagina
+        const skip = (page - 1) * limit;
+
+        const [destinations, total] = await prisma.$transaction([
+            prisma.destination.findMany({
+                orderBy: { name: 'asc' },
+                include: { images: true },
+                skip: skip,
+                take: limit,
+            }),
+            prisma.destination.count()
+        ]);
+
+        const totalPages = Math.ceil(total / limit);
+
+        res.status(200).json({
+            data: destinations,
+            pagination: {
+                total,
+                page,
+                totalPages,
+                limit
+            }
         });
-        res.status(200).json(destinations);
-    } catch (error) { res.status(500).json({ message: 'Errore del server.' }); }
+    } catch (error) {
+        console.error("Errore nel recuperare le destinazioni per l'admin:", error);
+        res.status(500).json({ message: 'Errore del server.' });
+    }
 };
 
 const createDestination = async (req, res) => {

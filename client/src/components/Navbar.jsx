@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { GlobalSearchBar } from './GlobalSearchBar'; // <-- IMPORTA IL NUOVO COMPONENTE
+import { GlobalSearchBar } from './GlobalSearchBar';
+import logo from '../assets/logo.png'; // <-- 1. IMPORTA L'IMMAGINE DEL LOGO
 
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const navLinkClass = ({ isActive }) =>
         isActive
-            ? 'text-sky-600 font-semibold border-b-2 border-sky-600'
-            : 'text-gray-700 hover:text-sky-600';
+            ? 'text-sky-600 font-semibold border-b-2 border-sky-600 py-1'
+            : 'text-gray-700 hover:text-sky-600 py-1';
 
     const mobileNavLinkClass = ({ isActive }) =>
         isActive
@@ -21,7 +22,11 @@ function Navbar() {
             <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex-shrink-0">
-                        <Link to="/" className="text-2xl font-bold text-sky-600">InfoSubito</Link>
+                        {/* --- 2. MODIFICA IL LINK PRINCIPALE --- */}
+                        <Link to="/" className="flex items-center gap-2">
+                            <span className="text-2xl font-bold text-sky-600">InfoSubito</span>
+                            <img src={logo} alt="Logo InfoSubito" className="h-10 w-10" />
+                        </Link>
                     </div>
 
                     <div className="hidden md:flex md:items-center md:space-x-8">
@@ -50,9 +55,7 @@ function Navbar() {
             {isMenuOpen && (
                 <div className="md:hidden border-t bg-white">
                     <div className="px-4 pt-4 pb-6 space-y-4">
-                        <div className="mb-4">
-                            <GlobalSearchBar />
-                        </div>
+                        <div className="mb-4"> <GlobalSearchBar /> </div>
                         <NavLink to="/" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Home</NavLink>
                         <NavLink to="/viaggio" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Viaggio</NavLink>
                         <NavLink to="/affari-sconti" className={mobileNavLinkClass} onClick={() => setIsMenuOpen(false)}>Affari & Sconti</NavLink>

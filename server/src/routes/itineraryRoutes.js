@@ -1,37 +1,29 @@
 import express from 'express';
 import {
-    getAllItineraries,
-    getItineraryById,
-    createItinerary,
-    updateItinerary,
-    deleteItinerary,
-    addItineraryImages,
-    deleteItineraryImage
+    getAllItineraries, getItineraryById, createItinerary, updateItinerary,
+    deleteItinerary, addItineraryImages, deleteItineraryImage, getAllItinerariesForAdmin
 } from '../controllers/itinerariesController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
+// --- Rotte Pubbliche ---
 router.route('/').get(getAllItineraries);
 router.route('/:id').get(getItineraryById);
 
 // --- Rotte Admin ---
-router.route('/admin/all').get(protect, getAllItineraries);
+// Usa una rotta unica e chiara per la lista admin
+router.route('/admin/list').get(protect, getAllItinerariesForAdmin);
 
-// La creazione riceve testo e file con nome 'images'
 router.route('/admin').post(protect, upload.array('images'), createItinerary);
 
 router.route('/admin/:id')
     .get(protect, getItineraryById)
-    // --- CORREZIONE QUI: Usa 'images' anche per l'update ---
     .put(protect, upload.array('images'), updateItinerary)
     .delete(protect, deleteItinerary);
 
-// Questa rotta non è più necessaria perché l'update gestisce già le immagini
-// router.route('/admin/:id/images')...
-
-router.route('/admin/images/:imageId')
-    .delete(protect, deleteItineraryImage);
+router.route('/admin/:itineraryId/images').post(protect, upload.array('images'), addItineraryImages);
+router.route('/admin/images/:imageId').delete(protect, deleteItineraryImage);
 
 export default router;
